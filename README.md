@@ -1,6 +1,6 @@
 # Java Senior Interview Preparation Guide
 
-This repository contains 22 Java interview questions covering key topics for senior-level positions.
+This repository contains 25 Java interview questions covering key topics for senior-level positions.
 
 ## Question Index
 
@@ -11,6 +11,9 @@ This repository contains 22 Java interview questions covering key topics for sen
 4. [Q11: Stream Skip and Limit](Q11_Stream_SkipLimit.java)
 5. [Q16: Iterator Remove Behavior](Q16_Iterator_Remove.java)
 6. [Q13: ByteBuffer Remaining](Q13_ByteBuffer_Remaining.java)
+7. [Q23: BST from Sorted Array](Q23_BST_From_Sorted_Array.java)
+8. [Q24: Card Game Maximum Sum](Q24_Card_Game_Maximum_Sum.java)
+9. [Q25: Pairs Divisible by 200](Q25_Pairs_Divisible_By_200.java)
 
 ### Concurrency & Threading
 7. [Q02: ExecutorService shutdownNow()](Q02_ExecutorService_ShutdownNow.java)
@@ -66,6 +69,7 @@ This repository contains 22 Java interview questions covering key topics for sen
 ## Topics Covered
 
 - Collections framework (TreeSet, HashSet, PriorityQueue, ArrayList, Iterator)
+- Data structures (Binary Search Trees, balanced tree construction, prefix/suffix sums, sliding window, frequency counting, modular arithmetic)
 - Concurrency (ExecutorService, ReentrantLock, ThreadLocal, synchronized)
 - Exception handling (checked vs unchecked, propagation, finally blocks)
 - Generics and wildcards
