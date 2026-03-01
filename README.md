@@ -1,6 +1,6 @@
 # Java Senior Interview Preparation Guide
 
-This repository contains 25 Java interview questions covering key topics for senior-level positions.
+This repository contains 29 Java interview questions covering key topics for senior-level positions.
 
 ## Question Index
 
@@ -14,6 +14,8 @@ This repository contains 25 Java interview questions covering key topics for sen
 7. [Q23: BST from Sorted Array](Q23_BST_From_Sorted_Array.java)
 8. [Q24: Card Game Maximum Sum](Q24_Card_Game_Maximum_Sum.java)
 9. [Q25: Pairs Divisible by 200](Q25_Pairs_Divisible_By_200.java)
+10. [Q26: Longest Increasing Path in Matrix](Q26_Longest_Increasing_Path_Matrix.java)
+11. [Q29: Constructor Order and equals/hashCode Contract](Q29_Constructor_Order_HashEquals.java)
 
 ### Concurrency & Threading
 7. [Q02: ExecutorService shutdownNow()](Q02_ExecutorService_ShutdownNow.java)
@@ -33,6 +35,7 @@ This repository contains 25 Java interview questions covering key topics for sen
 
 ### Object-Oriented Programming
 17. [Q21: Interface Default Methods](Q21_Interface_Default_Methods.java)
+18. [Q29: Constructor Order and equals/hashCode Contract](Q29_Constructor_Order_HashEquals.java)
 
 ### Memory Management & GC
 18. [Q19: Cyclic References Memory Leak](Q19_Cyclic_References_MemoryLeak.java)
@@ -40,6 +43,7 @@ This repository contains 25 Java interview questions covering key topics for sen
 ### Java Fundamentals
 19. [Q03: Java Serialization Format](Q03_Java_Serialization_Format.java)
 20. [Q10: Double Division Casting](Q10_Double_Division_Casting.java)
+21. [Q29: Constructor Order and equals/hashCode Contract](Q29_Constructor_Order_HashEquals.java)
 
 ### Git Commands
 21. [Q04: Git Log Graph](Q04_Git_Log_Graph.md)
@@ -69,7 +73,7 @@ This repository contains 25 Java interview questions covering key topics for sen
 ## Topics Covered
 
 - Collections framework (TreeSet, HashSet, PriorityQueue, ArrayList, Iterator)
-- Data structures (Binary Search Trees, balanced tree construction, prefix/suffix sums, sliding window, frequency counting, modular arithmetic)
+- Data structures (Binary Search Trees, balanced tree construction, prefix/suffix sums, sliding window, frequency counting, modular arithmetic, graph algorithms, dynamic programming)
 - Concurrency (ExecutorService, ReentrantLock, ThreadLocal, synchronized)
 - Exception handling (checked vs unchecked, propagation, finally blocks)
 - Generics and wildcards

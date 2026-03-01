@@ -22,6 +22,8 @@
  * - JSON, XML, BASE64 are text-based formats - not used by default serialization
  * - .class files are bytecode format, not serialization format
  * - Custom serialization can use JSON/XML (Jackson, Gson, JAXB), but that's not "standard"
+ *
+ * Java version: Java 8+ compatible.
  */
 
 import java.io.*;

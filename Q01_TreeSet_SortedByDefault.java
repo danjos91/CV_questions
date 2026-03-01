@@ -20,6 +20,8 @@
  * - HashMap uses hash table - no ordering guaranteed (unless LinkedHashMap)
  * - ArrayList maintains insertion order, not sorted order
  * - LinkedList maintains insertion order, not sorted order
+ *
+ * Java version: Java 8+ compatible.
  */
 
 import java.util.*;

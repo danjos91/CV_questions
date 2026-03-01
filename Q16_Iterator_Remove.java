@@ -34,6 +34,8 @@
  * - Then continues with remaining elements: 4, 5
  * - Output: 1 2 3 4 5 (all numbers printed)
  * - iterator.remove() is SAFE - updates modCount, so no CME
+ *
+ * Java version: Java 8+ compatible.
  */
 
 import java.util.*;

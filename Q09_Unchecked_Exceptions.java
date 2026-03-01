@@ -20,6 +20,8 @@
  * - Error subclasses: OutOfMemoryError, StackOverflowError, etc.
  * - Throwable is the root - includes both Exception and Error
  * - User-defined exceptions can be checked or unchecked depending on inheritance
+ *
+ * Java version: Java 8+ compatible.
  */
 
 public class Q09_Unchecked_Exceptions {

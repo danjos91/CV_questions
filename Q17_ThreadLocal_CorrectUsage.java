@@ -25,6 +25,8 @@
  * - Not calling remove() causes memory leaks
  * - Options 1, 2, 3, 5 are all CORRECT uses of ThreadLocal
  * - ThreadLocal should be static final for proper usage
+ *
+ * Java version: Java 8+ compatible.
  */
 
 public class Q17_ThreadLocal_CorrectUsage {

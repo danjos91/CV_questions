@@ -70,6 +70,9 @@
  *    - Start with all k from left, then slide window
  *    - Remove from left, add from right iteratively
  *    - Same complexity but more intuitive
+ *
+ * Java version: mainTemplate() requires Java 16+. Not compatible with Java below 16.
+ * - .toList() requires Java 16+; .strip() requires Java 11+
  */
 
 import java.io.BufferedReader;
@@ -268,8 +271,13 @@ public class Q24_Card_Game_Maximum_Sum {
     }
     
     /**
-     * Template solution for competitive programming
-     * This is the solution that would be submitted
+     * Template solution for competitive programming.
+     * This is the solution that would be submitted.
+     *
+     * Java version: Requires Java 16+. Not compatible with Java below 16.
+     * - .toList() requires Java 16+
+     * - .strip() requires Java 11+
+     * - Other APIs used are Java 8+ compatible
      */
     public static void mainTemplate(String[] args) throws IOException {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
@@ -277,7 +285,7 @@ public class Q24_Card_Game_Maximum_Sum {
             int k = Integer.parseInt(br.readLine());
             List<Integer> numbers = Arrays.stream(br.readLine().strip().split(" "))
                 .map(Integer::parseInt)
-                .collect(Collectors.toList());
+                .toList(); // Java 16+ only. Use .collect(Collectors.toList()) for Java 11
             
             // Optimal solution using prefix/suffix sums (computed in one loop)
             int[] prefix = new int[k + 1];

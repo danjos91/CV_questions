@@ -19,6 +19,8 @@
  * - 'abstract' is a modifier for classes/methods (not a keyword for interfaces)
  * - 'enum' is for creating enumerated types
  * - 'class' is for creating classes
+ *
+ * Java version: Java 8+ compatible.
  */
 
 public class Q12_Interface_Keyword {

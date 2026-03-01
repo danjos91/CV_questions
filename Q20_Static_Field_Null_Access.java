@@ -39,6 +39,8 @@
  * - BUT finally block ALWAYS executes and returns 4
  * - finally return OVERRIDES try/catch return
  * - Note: catch(Throwable) is unreachable (Exception caught first)
+ *
+ * Java version: Java 8+ compatible.
  */
 
 public class Q20_Static_Field_Null_Access {

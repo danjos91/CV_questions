@@ -43,6 +43,8 @@
  * - main() catches RuntimeException → handles NPE
  * - Prints "main"
  * - "foo" is never printed (exception thrown before)
+ *
+ * Java version: Java 8+ compatible.
  */
 
 public class Q22_Exception_Propagation {

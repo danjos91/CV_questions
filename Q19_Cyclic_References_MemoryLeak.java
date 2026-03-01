@@ -45,6 +45,8 @@
  * - ParallelGC CAN handle cyclic references
  * - Objects CAN move between generations even with cycles
  * - The real issue: if references are held (not released), that's the leak, not the cycle
+ *
+ * Java version: Java 8+ compatible.
  */
 
 public class Q19_Cyclic_References_MemoryLeak {

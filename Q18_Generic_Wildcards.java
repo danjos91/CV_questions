@@ -31,6 +31,8 @@
  * - c3: Container<Double> NOT assignable to Container<? extends Integer> ✗
  * - c4: Container<String> assignable to Container<? extends Object> ✓
  * - c5: Container<Object> assignable to Container<? super String> ✓
+ *
+ * Java version: Java 8+ compatible.
  */
 
 public class Q18_Generic_Wildcards {

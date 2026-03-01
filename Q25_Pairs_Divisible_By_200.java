@@ -311,8 +311,11 @@ public class Q25_Pairs_Divisible_By_200 {
     }
     
     /**
-     * Template solution for competitive programming
-     * This is the solution that would be submitted
+     * Template solution for competitive programming.
+     * This is the solution that would be submitted.
+     *
+     * Java version: Requires Java 11+. Not compatible with Java below 11.
+     * - .strip() requires Java 11+ (use .trim() for Java 8)
      */
     public static void mainTemplate(String[] args) throws IOException {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {

@@ -32,6 +32,8 @@
  * - get(): reads byte at position 0, position=1
  * - get(): reads byte at position 1, position=2
  * - remaining() = limit - position = 3 - 2 = 1
+ *
+ * Java version: Java 8+ compatible.
  */
 
 import java.nio.*;

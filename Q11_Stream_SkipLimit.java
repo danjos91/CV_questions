@@ -26,6 +26,8 @@
  * - limit(2) takes next 2 elements: ["c", "d"]
  * - joining(",") joins with comma: "c,d"
  * - No spaces in the delimiter
+ *
+ * Java version: Java 8+ compatible.
  */
 
 import java.util.*;

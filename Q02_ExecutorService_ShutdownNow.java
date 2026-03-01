@@ -25,6 +25,8 @@
  * - shutdownNow() does NOT guarantee immediate termination - it depends on tasks 
  *   responding to interruption
  * - shutdown() (without Now) allows current tasks to finish but rejects new tasks
+ *
+ * Java version: Java 8+ compatible.
  */
 
 import java.util.*;

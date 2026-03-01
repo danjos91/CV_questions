@@ -35,6 +35,8 @@
  * - staticField is shared: starts at 20, obj1.increment() makes it 21, 
  *   obj2.increment() makes it 22
  * - Each object has its own instance field, but shares static field
+ *
+ * Java version: Java 8+ compatible.
  */
 
 public class Q14_Static_vs_Instance_Fields {

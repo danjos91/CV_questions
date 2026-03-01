@@ -24,6 +24,8 @@
  * - (int) d truncates (not rounds) → 3
  * - Casting double to int removes decimal part
  * - No error - explicit cast is valid
+ *
+ * Java version: Java 8+ compatible.
  */
 
 public class Q10_Double_Division_Casting {

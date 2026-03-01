@@ -24,6 +24,8 @@
  * - Performance: ReentrantLock can be faster in some scenarios, but not always
  * - Neither manages thread priorities directly
  * - Both are for mutual exclusion, not thread communication
+ *
+ * Java version: Java 8+ compatible.
  */
 
 import java.util.concurrent.locks.*;

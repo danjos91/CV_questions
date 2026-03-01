@@ -41,6 +41,8 @@
  * - B overrides method() → prints "B"
  * - Default method from I is NOT called (overridden in B)
  * - Output: "B"
+ *
+ * Java version: Java 8+ compatible. (default methods in interfaces require Java 8+)
  */
 
 public class Q21_Interface_Default_Methods {

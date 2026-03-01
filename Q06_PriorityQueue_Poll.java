@@ -27,6 +27,8 @@
  * - Elements added: 10, 20, 5
  * - After insertion, heap structure: head = 5 (smallest)
  * - poll() returns 5
+ *
+ * Java version: Java 8+ compatible.
  */
 
 import java.util.*;

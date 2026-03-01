@@ -26,6 +26,8 @@
  * - Space complexity: O(log n) for recursion stack (balanced tree)
  * - Results in a balanced BST (height = log n)
  * - Other approaches result in skewed trees (height = n) or worse time complexity
+ *
+ * Java version: Java 8+ compatible.
  */
 
 public class Q23_BST_From_Sorted_Array {

@@ -38,6 +38,8 @@
  * - If finally has return, it OVERRIDES any previous return
  * - Result: 4 (from finally block)
  * - Note: catch(Throwable) is unreachable because Exception is a subclass of Throwable
+ *
+ * Java version: Java 8+ compatible.
  */
 
 public class Q15_Exception_Finally_Return {

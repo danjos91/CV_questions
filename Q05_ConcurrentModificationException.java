@@ -24,6 +24,8 @@
  * - Iterator.remove() and ListIterator.remove() are SAFE - they update modCount
  * - For loop with index access is SAFE - no iterator involved
  * - Streams forEach() can throw CME if underlying collection is modified
+ *
+ * Java version: Java 8+ compatible.
  */
 
 import java.util.*;
