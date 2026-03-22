@@ -1,6 +1,6 @@
 # Java Senior Interview Preparation Guide
 
-This repository contains 29 Java interview questions covering key topics for senior-level positions.
+This repository contains 33 Java interview questions covering key topics for senior-level positions.
 
 ## Question Index
 
@@ -16,6 +16,9 @@ This repository contains 29 Java interview questions covering key topics for sen
 9. [Q25: Pairs Divisible by 200](Q25_Pairs_Divisible_By_200.java)
 10. [Q26: Longest Increasing Path in Matrix](Q26_Longest_Increasing_Path_Matrix.java)
 11. [Q29: Constructor Order and equals/hashCode Contract](Q29_Constructor_Order_HashEquals.java)
+12. [Q31: Rebus Decode](Q31_Rebus_Decode.java)
+13. [Q32: Exam Seating Balance](Q32_Exam_Seating_Balance.java)
+14. [Q33: Two Sum (numbers vs indices)](Q33_TwoSum.java)
 
 ### Concurrency & Threading
 7. [Q02: ExecutorService shutdownNow()](Q02_ExecutorService_ShutdownNow.java)
