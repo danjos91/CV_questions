@@ -1,91 +1,86 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
-/**
- * Java version: Requires Java 11+. Not compatible with Java below 11.
- * - .strip() requires Java 11+ (use .trim() for Java 8)
- */
-public class Main{
-
-    private static int getLongestIncreasingPath(List<List<Integer>> matrix) {
-        int n = matrix.size();
-        int m = matrix.get(0).size();
-        
-        // Memoization: dp[i][j] = longest increasing path starting from (i, j)
-        int[][] dp = new int[n][m];
-        
-        int maxPath = 0;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                maxPath = Math.max(maxPath, dfs(matrix, i, j, dp));
-            }
-        }
-        
-        return maxPath;
-    }
-    
-    private static int dfs(List<List<Integer>> matrix, int i, int j, int[][] dp) {
-        // If already computed, return cached result
-        if (dp[i][j] != 0) {
-            return dp[i][j];
-        }
-        
-        int n = matrix.size();
-        int m = matrix.get(0).size();
-        int currentValue = matrix.get(i).get(j);
-        
-        // Base case: path of length 1 (the cell itself)
-        int maxPath = 1;
-        
-        // Directions: up, down, left, right
-        int[] dx = {-1, 1, 0, 0};
-        int[] dy = {0, 0, -1, 1};
-        
-        // Try all 4 directions
-        for (int d = 0; d < 4; d++) {
-            int ni = i + dx[d];
-            int nj = j + dy[d];
-            
-            // Check if valid and strictly increasing
-            if (ni >= 0 && ni < n && nj >= 0 && nj < m && 
-                matrix.get(ni).get(nj) > currentValue) {
-                maxPath = Math.max(maxPath, 1 + dfs(matrix, ni, nj, dp));
-            }
-        }
-        
-        // Cache and return result
-        dp[i][j] = maxPath;
-        return maxPath;
-    }
-
+public class Main {
     public static void main(String[] args) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
-            List<List<Integer>> matrix = readMatrix(reader);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(System.out));
+        String s = reader.readLine();
+        int n = s.length();
 
-            System.out.println(getLongestIncreasingPath(matrix));
-        } 
-        
-    }
-
-    private static List<List<Integer>> readMatrix(BufferedReader reader) throws IOException {
-        String[] sizes = reader.readLine().strip().split(" ");
-        int n = Integer.parseInt(sizes[0]);
-        List<List<Integer>> matrix = new ArrayList<List<Integer>>(n);
+        // M = mayor frecuencia de una sola letra.
+        // Ninguna subcadena puede tener mas de M apariciones no solapadas.
+        int[] frequency = new int[26];
+        int maxCount = 0;
         for (int i = 0; i < n; i++) {
-            matrix.add(readList(reader));
+            int index = s.charAt(i) - 'a';
+            frequency[index]++;
+            maxCount = Math.max(maxCount, frequency[index]);
         }
-        return matrix;
+
+        // Guardamos las posiciones de cada letra.
+        ArrayList<ArrayList<Integer>> pos = new ArrayList<>();
+        for (int i = 0; i < 26; i++) {
+            pos.add(new ArrayList<>());
+        }
+
+        for (int i = 0; i < n; i++) {
+            int index = s.charAt(i) - 'a';
+            pos.get(index).add(i);
+        }
+
+        int answer = 1;
+        for (int i = 0; i < 26; i++) {
+            // Solo probamos letras que alcanzan la frecuencia maxima M.
+            if (frequency[i] == maxCount) {
+                answer = Math.max(answer, getBestLength(s, pos.get(i)));
+            }
+        }
+
+        writer.write(String.valueOf(answer));
+
+        reader.close();
+        writer.close();
     }
 
-    private static List<Integer> readList(BufferedReader reader) throws IOException {
-        return Arrays.asList(reader.readLine().strip().split(" "))
-            .stream()
-            .map(token -> Integer.parseInt(token))
-            .collect(Collectors.toList());
+    static int getBestLength(String s, ArrayList<Integer> pos) {
+        int occur = pos.size();
+        int n = s.length();
+
+        // La ultima ocurrencia no puede salirse del string.
+        int limit = n - pos.get(occur - 1);
+
+        // Para que no haya interseccion, la longitud no puede superar
+        // la distancia entre dos comienzos consecutivos.
+        for (int i = 1; i < occur; i++) {
+            limit = Math.min(limit, pos.get(i) - pos.get(i - 1));
+        }
+
+        int len = 0;
+        while (len < limit) {
+            // Comparamos el caracter en offset "len" en todas las ocurrencias.
+            char expected = s.charAt(pos.get(0) + len);
+            boolean allEqual = true;
+
+            for (int i = 1; i < occur; i++) {
+                if (s.charAt(pos.get(i) + len) != expected) {
+                    allEqual = false;
+                    break;
+                }
+            }
+
+            if (!allEqual) {
+                break;
+            }
+
+            // Si todos coinciden, podemos extender la subcadena un caracter mas.
+            len++;
+        }
+
+        return len;
     }
 }
