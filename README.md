@@ -1,6 +1,6 @@
 # Java Senior Interview Preparation Guide
 
-This repository contains 36 Java interview questions covering key topics for senior-level positions.
+This repository contains 37 Java interview questions covering key topics for senior-level positions.
 
 ## Question Index
 
@@ -22,6 +22,7 @@ This repository contains 36 Java interview questions covering key topics for sen
 15. [Q34: Basketball — top scorer from score records](Q31_Basketball_Score_By_Player.java)
 16. [Q35: Courier unknown position (max X)](Q32_Courier_Unknown_Position.java)
 17. [Q36: Non-overlapping substrings (maximize length)](Q33_Non_Overlapping_Substrings.java)
+18. [Q37: Artifact exhibition — minimize adjacent differences (smallest range)](Q37_Artifact_Exhibition_Min_Adjacent_Sum.java)
 
 ### Concurrency & Threading
 7. [Q02: ExecutorService shutdownNow()](Q02_ExecutorService_ShutdownNow.java)
@@ -79,7 +80,7 @@ This repository contains 36 Java interview questions covering key topics for sen
 ## Topics Covered
 
 - Collections framework (TreeSet, HashSet, PriorityQueue, ArrayList, Iterator)
-- Data structures (Binary Search Trees, balanced tree construction, prefix/suffix sums, sliding window, frequency counting, modular arithmetic, graph algorithms, dynamic programming, HashMap score aggregation, interval intersection, string processing)
+- Data structures (Binary Search Trees, balanced tree construction, prefix/suffix sums, sliding window, frequency counting, modular arithmetic, graph algorithms, dynamic programming, HashMap score aggregation, interval intersection, string processing, multi-list smallest range / k-way merge)
 - Concurrency (ExecutorService, ReentrantLock, ThreadLocal, synchronized)
 - Exception handling (checked vs unchecked, propagation, finally blocks)
 - Generics and wildcards

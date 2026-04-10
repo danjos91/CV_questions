@@ -1,86 +1,90 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
+import java.io.*;
+import java.util.*;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(System.out));
-        String s = reader.readLine();
-        int n = s.length();
 
-        // M = mayor frecuencia de una sola letra.
-        // Ninguna subcadena puede tener mas de M apariciones no solapadas.
-        int[] frequency = new int[26];
-        int maxCount = 0;
-        for (int i = 0; i < n; i++) {
-            int index = s.charAt(i) - 'a';
-            frequency[index]++;
-            maxCount = Math.max(maxCount, frequency[index]);
-        }
-
-        // Guardamos las posiciones de cada letra.
-        ArrayList<ArrayList<Integer>> pos = new ArrayList<>();
-        for (int i = 0; i < 26; i++) {
-            pos.add(new ArrayList<>());
-        }
-
-        for (int i = 0; i < n; i++) {
-            int index = s.charAt(i) - 'a';
-            pos.get(index).add(i);
-        }
-
-        int answer = 1;
-        for (int i = 0; i < 26; i++) {
-            // Solo probamos letras que alcanzan la frecuencia maxima M.
-            if (frequency[i] == maxCount) {
-                answer = Math.max(answer, getBestLength(s, pos.get(i)));
+    static int lowerBound(int[] arr, int target) {
+        int left = 0;
+        int right = arr.length;
+        while (left < right) {
+            int mid = (left + right) / 2;
+            if (arr[mid] < target) {
+                left = mid + 1;
+            } else {
+                right = mid;
             }
         }
-
-        writer.write(String.valueOf(answer));
-
-        reader.close();
-        writer.close();
+        return left;
     }
 
-    static int getBestLength(String s, ArrayList<Integer> pos) {
-        int occur = pos.size();
-        int n = s.length();
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        // La ultima ocurrencia no puede salirse del string.
-        int limit = n - pos.get(occur - 1);
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int n = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
 
-        // Para que no haya interseccion, la longitud no puede superar
-        // la distancia entre dos comienzos consecutivos.
-        for (int i = 1; i < occur; i++) {
-            limit = Math.min(limit, pos.get(i) - pos.get(i - 1));
+        int[][] a = new int[n][m];
+        for (int i = 0; i < n; i++) {
+            st = new StringTokenizer(br.readLine());
+            for (int j = 0; j < m; j++) {
+                a[i][j] = Integer.parseInt(st.nextToken());
+            }
+            Arrays.sort(a[i]);
         }
 
-        int len = 0;
-        while (len < limit) {
-            // Comparamos el caracter en offset "len" en todas las ocurrencias.
-            char expected = s.charAt(pos.get(0) + len);
-            boolean allEqual = true;
+        PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(x -> x[0]));
+        int currentMax = Integer.MIN_VALUE;
+        long sum = 0;
+        long bestDiff = Long.MAX_VALUE;
+        long bestSum = Long.MAX_VALUE;
+        int bestLeft = 0;
 
-            for (int i = 1; i < occur; i++) {
-                if (s.charAt(pos.get(i) + len) != expected) {
-                    allEqual = false;
-                    break;
-                }
+        for (int i = 0; i < n; i++) {
+            pq.add(new int[] {a[i][0], i, 0});
+            sum += a[i][0];
+            currentMax = Math.max(currentMax, a[i][0]);
+        }
+
+        while (true) {
+            int[] min = pq.poll();
+            long diff = (long) currentMax - min[0];
+
+            if (diff < bestDiff || diff == bestDiff && sum < bestSum) {
+                bestDiff = diff;
+                bestSum = sum;
+                bestLeft = min[0];
             }
 
-            if (!allEqual) {
+            int era = min[1];
+            int index = min[2] + 1;
+            if (index == m) {
                 break;
             }
 
-            // Si todos coinciden, podemos extender la subcadena un caracter mas.
-            len++;
+            sum -= min[0];
+            int nextValue = a[era][index];
+            pq.add(new int[] {nextValue, era, index});
+            sum += nextValue;
+            currentMax = Math.max(currentMax, nextValue);
         }
 
-        return len;
+        int[] ans = new int[n];
+        for (int i = 0; i < n; i++) {
+            ans[i] = a[i][lowerBound(a[i], bestLeft)];
+        }
+        Arrays.sort(ans);
+
+        for (int i = 0; i < n; i++) {
+            if (i > 0) {
+                bw.write(" ");
+            }
+            bw.write(String.valueOf(ans[i]));
+        }
+        bw.newLine();
+        bw.flush();
+        br.close();
+        bw.close();
     }
 }
