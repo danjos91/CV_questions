@@ -1,6 +1,6 @@
 # Java Senior Interview Preparation Guide
 
-This repository contains 37 Java interview questions covering key topics for senior-level positions.
+This repository contains 37 interview and exam questions covering key topics for senior-level positions.
 
 ## Question Index
 
@@ -56,6 +56,9 @@ This repository contains 37 Java interview questions covering key topics for sen
 21. [Q04: Git Log Graph](Q04_Git_Log_Graph.md)
 22. [Q07: Git Log Function History](Q07_Git_Log_Function_History.md)
 
+### Mathematics
+23. [Q34: Distance from a Point to a Plane](Q34_Point_To_Plane_Distance.md)
+
 ## How to Use
 
 1. Each Java file contains:
@@ -87,3 +90,4 @@ This repository contains 37 Java interview questions covering key topics for sen
 - Memory management and garbage collection
 - Java fundamentals (interfaces, static fields, casting)
 - Git commands for code history
+- Analytic geometry (point-to-plane distance in 3D)
