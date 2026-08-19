@@ -1,6 +1,6 @@
 # Java Senior Interview Preparation Guide
 
-This repository contains 37 interview and exam questions covering key topics for senior-level positions.
+This repository contains 44 interview and exam questions covering key topics for senior-level positions.
 
 ## Question Index
 
@@ -58,6 +58,18 @@ This repository contains 37 interview and exam questions covering key topics for
 
 ### Mathematics
 23. [Q34: Distance from a Point to a Plane](Q34_Point_To_Plane_Distance.md)
+24. [Q38: Probability of the Next Click (Exponential Distribution)](Q38_Exponential_Click_Probability.md)
+25. [Q39: Area of a Figure on a Grid](Q39_Grid_Figure_Area.md)
+26. [Q40: Largest Eigenvalue of a Matrix](Q40_Largest_Eigenvalue.md)
+27. [Q41: Grid figure — why the answer 18 is wrong](Q41_Figure_Area.md)
+28. [Q42: Binary Classification Threshold](Q42_Binary_Classification_Threshold.md)
+29. [Q43: Two Boxes — Maximize Probability of a Blue Ball](Q43_Two_Boxes_Blue_Ball_Probability.md)
+30. [Q44: Area of a Figure on a 6×4 Grid](Q44_Grid_Figure_Area.md)
+31. [Q45: Linear Regression Slope (Least Squares)](Q45_Linear_Regression_Slope.md)
+32. [Q46: Shooting Gallery Prizes](Q46_Shooting_Gallery_Prizes.md)
+33. [Q47: Limit of a Recursive Sequence](Q47_Recursive_Sequence_Limit.md)
+34. [Q48: Gold Stealing (Dasha and Zulik)](Q48_Gold_Stealing.md)
+35. [Q49: Partial Derivative \(f_x(3, 4)\)](Q49_Partial_Derivative_fx.md)
 
 ## How to Use
 
@@ -91,3 +103,8 @@ This repository contains 37 interview and exam questions covering key topics for
 - Java fundamentals (interfaces, static fields, casting)
 - Git commands for code history
 - Analytic geometry (point-to-plane distance in 3D)
+- Probability (exponential distribution, waiting time / Poisson process, law of total probability, optimal allocation)
+- Grid geometry (polygon area by decomposition and the shoelace formula)
+- Statistics (ordinary least squares, linear regression slope)
+- Sequences and limits (recursive sequences, monotone convergence)
+- Multivariable calculus (partial derivatives, chain rule, logarithms)
