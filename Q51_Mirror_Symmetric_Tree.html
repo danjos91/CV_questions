@@ -1,0 +1,1402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Q51 — Mirror-Symmetric Binary Tree</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f3efe6;
+      --bg-2: #e7efe8;
+      --ink: #1c1915;
+      --muted: #5c574e;
+      --card: rgba(255, 252, 247, 0.86);
+      --line: #d9d1c3;
+      --accent: #1f6b5a;
+      --accent-2: #c45c26;
+      --yes: #1b7a4a;
+      --no: #b42318;
+      --pair-a: #2563eb;
+      --pair-b: #7c3aed;
+      --shadow: 0 18px 50px rgba(40, 28, 12, 0.12);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: "Source Sans 3", system-ui, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, #f7e7d3 0%, transparent 55%),
+        radial-gradient(900px 500px at 100% 0%, #dceee4 0%, transparent 50%),
+        var(--bg);
+      min-height: 100vh;
+    }
+
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 28px 20px 80px; }
+
+    header.hero {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: end;
+      margin-bottom: 28px;
+    }
+    .kicker {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 500;
+    }
+    h1 {
+      font-family: Fraunces, Georgia, serif;
+      font-size: clamp(2rem, 4vw, 3.15rem);
+      line-height: 1.08;
+      margin: 6px 0 10px;
+      font-weight: 700;
+    }
+    .lede { max-width: 62ch; color: var(--muted); font-size: 1.08rem; margin: 0; }
+    .badge-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+    .badge {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 12px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid var(--line);
+    }
+
+    .rule-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px 20px;
+      max-width: 340px;
+    }
+    .rule-card h2 { font-size: 0.92rem; margin: 0 0 10px; }
+    .pair-rule {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 8px;
+      align-items: center;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 13px;
+    }
+    .node-chip {
+      background: #fff;
+      border: 1.5px solid var(--ink);
+      border-radius: 999px;
+      padding: 6px 10px;
+      text-align: center;
+    }
+    .cross { color: var(--accent-2); font-weight: 600; }
+    .rule-note { color: var(--muted); font-size: 13px; margin: 10px 0 0; }
+
+    section { margin: 28px 0; }
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .section-title h2 {
+      font-family: Fraunces, Georgia, serif;
+      font-size: 1.45rem;
+      margin: 0;
+    }
+    .hint { color: var(--muted); font-size: 0.95rem; }
+
+    .examples {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 12px;
+    }
+    .ex {
+      text-align: left;
+      background: var(--card);
+      border: 1.5px solid var(--line);
+      border-radius: 14px;
+      padding: 12px 14px;
+      cursor: pointer;
+      transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s;
+    }
+    .ex:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(40,28,12,.1); }
+    .ex.active { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(31,107,90,.18); }
+    .ex .ex-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+    .ex h3 { margin: 0; font-size: 0.98rem; }
+    .pill {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 3px 8px;
+      border-radius: 999px;
+    }
+    .pill.yes { background: #d8f3e3; color: var(--yes); }
+    .pill.no { background: #fde2df; color: var(--no); }
+    .ex p { margin: 8px 0 0; color: var(--muted); font-size: 13px; line-height: 1.35; }
+
+    .stage {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.9fr);
+      gap: 16px;
+    }
+    .canvas, .side {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .canvas-head, .side-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,.55);
+    }
+    .canvas-head h3, .side-head h3 { margin: 0; font-size: 0.95rem; }
+    .verdict {
+      font-family: Fraunces, Georgia, serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      padding: 4px 12px;
+      border-radius: 999px;
+    }
+    .verdict.yes { background: #d8f3e3; color: var(--yes); }
+    .verdict.no { background: #fde2df; color: var(--no); }
+    .verdict.pending { background: #efe8dc; color: var(--muted); }
+
+    #treeSvg { width: 100%; height: min(62vh, 540px); display: block; background:
+      linear-gradient(180deg, rgba(255,255,255,.35), transparent 40%),
+      repeating-linear-gradient(90deg, transparent, transparent 23px, rgba(28,25,21,.035) 24px),
+      repeating-linear-gradient(0deg, transparent, transparent 23px, rgba(28,25,21,.035) 24px);
+    }
+    .axis { stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 6 7; opacity: 0.75; }
+    .edge { stroke: #3b342c; stroke-width: 2; fill: none; }
+    .ghost-edge { stroke: #b7aea0; stroke-width: 1.4; stroke-dasharray: 4 4; fill: none; }
+    .node-circle { fill: #fffdf8; stroke: #1c1915; stroke-width: 2; }
+    .node-circle.current-a { fill: #dbe7ff; stroke: var(--pair-a); stroke-width: 3; }
+    .node-circle.current-b { fill: #eee4ff; stroke: var(--pair-b); stroke-width: 3; }
+    .node-circle.match { fill: #d8f3e3; stroke: var(--yes); }
+    .node-circle.fail { fill: #fde2df; stroke: var(--no); }
+    .node-circle.done { fill: #e8f6ee; stroke: var(--yes); }
+    .node-val { font-family: Fraunces, Georgia, serif; font-size: 16px; font-weight: 700; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+    .node-idx { font-family: "IBM Plex Mono", monospace; font-size: 10px; fill: var(--muted); text-anchor: middle; pointer-events: none; }
+    .ghost { fill: #f4efe6; stroke: #b7aea0; stroke-dasharray: 3 3; }
+    .ghost-x { font-family: "IBM Plex Mono", monospace; font-size: 12px; fill: #8a8174; text-anchor: middle; dominant-baseline: central; }
+    .link-pair { fill: none; stroke-width: 2; stroke-dasharray: 5 5; opacity: 0.9; }
+    .axis-label { font-family: "IBM Plex Mono", monospace; font-size: 11px; fill: var(--accent); letter-spacing: 0.08em; }
+    .node-hit { cursor: pointer; }
+
+    .controls { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 16px; border-top: 1px solid var(--line); }
+    button, .file-like {
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+    button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    button:hover { filter: brightness(1.05); }
+    button:disabled { opacity: 0.45; cursor: not-allowed; }
+    .speed {
+      display: flex; align-items: center; gap: 8px; margin-left: auto;
+      font-size: 13px; color: var(--muted);
+    }
+
+    .side-body { padding: 14px 16px 18px; }
+    .step-box {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      min-height: 92px;
+    }
+    .step-box .meta {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .step-box p { margin: 6px 0 0; font-size: 0.98rem; line-height: 1.4; }
+    .stack-list {
+      display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px;
+    }
+    .stack-item {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 8px;
+      background: #efe8dc;
+    }
+    .stack-item.now { background: #dbe7ff; }
+    .why { margin-top: 14px; }
+    .why h4 { margin: 0 0 6px; font-size: 0.9rem; }
+    .why ol { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; }
+    .legend { display: flex; flex-wrap: wrap; gap: 10px 14px; margin-top: 14px; font-size: 12px; color: var(--muted); }
+    .swatch { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; vertical-align: -1px; border: 1px solid #1c1915; }
+
+    .builder {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 16px;
+    }
+    textarea {
+      width: 100%;
+      min-height: 210px;
+      resize: vertical;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 13px;
+      line-height: 1.45;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      padding: 12px;
+      background: #fffdf8;
+    }
+    .help-list { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; }
+    .help-list li { margin: 6px 0; }
+    kbd {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 5px;
+      padding: 1px 5px;
+    }
+
+    .popover {
+      position: fixed;
+      z-index: 5;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      padding: 10px;
+      display: none;
+    }
+    .popover input { width: 88px; font-size: 16px; padding: 6px; }
+
+    footer {
+      margin-top: 36px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .primer {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px 22px 8px;
+    }
+    .primer h2 {
+      font-family: Fraunces, Georgia, serif;
+      font-size: 1.45rem;
+      margin: 0 0 8px;
+    }
+    .primer-intro { color: var(--muted); max-width: 72ch; margin: 0 0 18px; }
+    .primer-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .primer-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+    }
+    .primer-card h3 { margin: 0 0 8px; font-size: 1rem; }
+    .primer-card p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.45; }
+    .mini-person {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      margin: 10px 0 8px; font-family: "IBM Plex Mono", monospace; font-size: 11px;
+    }
+    .hand {
+      border: 2px solid var(--ink);
+      border-radius: 10px;
+      padding: 8px 10px;
+      background: #fff7ea;
+      text-align: center;
+      font-weight: 700;
+    }
+    .hand.l { background: #dbe7ff; }
+    .hand.r { background: #eee4ff; }
+    .body-dot {
+      width: 36px; height: 48px; border: 2px solid var(--ink); border-radius: 18px;
+      display: flex; align-items: center; justify-content: center; font-weight: 700;
+    }
+
+    .build {
+      border-top: 1px solid var(--line);
+      padding: 16px 0 8px;
+    }
+    .build h3 {
+      font-family: Fraunces, Georgia, serif;
+      font-size: 1.2rem;
+      margin: 0 0 6px;
+    }
+    .build-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin: 14px 0;
+    }
+    .build-step {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px 10px 6px;
+    }
+    .build-step .num {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .build-step p { margin: 4px 0 8px; font-size: 13px; color: var(--muted); line-height: 1.35; }
+    .build-step svg { width: 100%; height: auto; display: block; }
+    .in-line {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 12px;
+      background: #efe8dc;
+      border-radius: 6px;
+      padding: 2px 6px;
+    }
+
+    .fold-row {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 12px;
+      align-items: center;
+      margin: 8px 0 18px;
+    }
+    .fold-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px;
+    }
+    .fold-card h4 { margin: 0 0 6px; font-size: 0.95rem; }
+    .fold-card p { margin: 8px 0 0; color: var(--muted); font-size: 13px; line-height: 1.4; }
+    .fold-arrow {
+      font-family: Fraunces, Georgia, serif;
+      font-size: 1.6rem;
+      color: var(--accent-2);
+      text-align: center;
+    }
+    .arm-tag { font-family: "IBM Plex Mono", monospace; font-size: 11px; font-weight: 700; }
+
+    @media (max-width: 900px) {
+      header.hero, .stage, .builder, .primer-grid, .build-steps, .fold-row { grid-template-columns: 1fr; }
+      .rule-card { max-width: none; }
+      .speed { margin-left: 0; width: 100%; }
+      .fold-arrow { transform: rotate(90deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <div>
+        <div class="kicker">Question 51 · Twin-Tree · Дерево-двойник</div>
+        <h1>Is this binary tree a mirror of itself?</h1>
+        <p class="lede">
+          You do not need prior tree theory. A binary tree is just circles connected
+          downward: each circle may have a left child, a right child, both, or neither.
+          “Mirror-symmetric” means: fold the drawing along the dashed line through the root,
+          and every circle lands on a circle with the same number.
+        </p>
+        <div class="badge-row">
+          <span class="badge">Root = vertex 1</span>
+          <span class="badge">1-based indices</span>
+          <span class="badge">Missing child = −1</span>
+          <span class="badge">Time O(n)</span>
+        </div>
+      </div>
+      <aside class="rule-card">
+        <h2>Two nodes <em>a</em> and <em>b</em> are mirrors iff</h2>
+        <div class="pair-rule">
+          <div class="node-chip">a</div>
+          <span class="cross">↔</span>
+          <div class="node-chip">b</div>
+          <div class="node-chip">left(a)</div>
+          <span class="cross">↔</span>
+          <div class="node-chip">right(b)</div>
+          <div class="node-chip">right(a)</div>
+          <span class="cross">↔</span>
+          <div class="node-chip">left(b)</div>
+        </div>
+        <p class="rule-note">Both missing is a match. One missing, or unequal values, is a fail.</p>
+      </aside>
+    </header>
+
+    <section class="primer">
+      <h2>What a binary tree is (no theory required)</h2>
+      <p class="primer-intro">
+        Think of a family photo hung on a wall. The person at the top is the <strong>root</strong>.
+        Each person can hold at most two children’s hands: one on their <strong>left</strong>
+        (drawn to the left on the page) and one on their <strong>right</strong> (drawn to the right).
+        If a hand is empty, the input writes <code>−1</code>.
+      </p>
+      <div class="primer-grid">
+        <article class="primer-card">
+          <h3>1. A node is just a circle</h3>
+          <p>
+            Vertex <strong>#2</strong> with value <strong>2</strong> is a circle labeled 2.
+            The number inside is the stored value. The small index (#2) is only an ID so we
+            can say “left child is vertex 4”.
+          </p>
+        </article>
+        <article class="primer-card">
+          <h3>2. Left and right are on the page</h3>
+          <p>
+            “Left child of 2” means: draw a line from 2 <em>down-left</em>.
+            “Right child of 3” means: draw a line from 3 <em>down-right</em>.
+            It is not “left from the node’s point of view” — it is left/right as you look at the picture.
+          </p>
+        </article>
+        <article class="primer-card">
+          <h3>3. A mirror swaps left and right</h3>
+          <div class="mini-person">
+            <div class="hand l">LEFT<br />hand</div>
+            <div class="body-dot">you</div>
+            <div class="hand r">RIGHT<br />hand</div>
+          </div>
+          <p>
+            Stand in front of a mirror. Your left hand appears on the <em>right</em> side of the reflection.
+            Folding the tree does the same: the left arm of someone on the left lands on the right arm of their twin on the right.
+          </p>
+        </article>
+      </div>
+
+      <div class="build">
+        <h3>How Example 1 is built from the input</h3>
+        <p class="primer-intro">
+          Each line is one vertex: <span class="in-line">value &nbsp; left-child-id &nbsp; right-child-id</span>.
+          We start at vertex 1 (always the root) and hang children where the numbers point.
+        </p>
+        <div class="build-steps">
+          <div class="build-step">
+            <div class="num">Step 1 · line 1</div>
+            <p><span class="in-line">1  2  3</span><br />Root #1. Hang #2 on the left, #3 on the right.</p>
+            <svg viewBox="0 0 220 150" aria-hidden="true">
+              <line x1="110" y1="10" x2="110" y2="140" stroke="#1f6b5a" stroke-dasharray="4 5" stroke-width="1.5"/>
+              <line x1="110" y1="36" x2="55" y2="88" stroke="#3b342c" stroke-width="2"/>
+              <line x1="110" y1="36" x2="165" y2="88" stroke="#3b342c" stroke-width="2"/>
+              <circle cx="110" cy="28" r="16" fill="#fffdf8" stroke="#1c1915" stroke-width="2"/>
+              <text x="110" y="33" text-anchor="middle" font-family="Fraunces,serif" font-size="14" font-weight="700">1</text>
+              <text x="110" y="8" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#5c574e">#1</text>
+              <circle cx="55" cy="100" r="16" fill="#dbe7ff" stroke="#2563eb" stroke-width="2"/>
+              <text x="55" y="105" text-anchor="middle" font-family="Fraunces,serif" font-size="14" font-weight="700">2</text>
+              <text x="55" y="80" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#2563eb">#2 left</text>
+              <circle cx="165" cy="100" r="16" fill="#eee4ff" stroke="#7c3aed" stroke-width="2"/>
+              <text x="165" y="105" text-anchor="middle" font-family="Fraunces,serif" font-size="14" font-weight="700">2</text>
+              <text x="165" y="80" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#7c3aed">#3 right</text>
+            </svg>
+          </div>
+          <div class="build-step">
+            <div class="num">Step 2 · line 2</div>
+            <p><span class="in-line">2  4  −1</span><br />#2 has a <strong>left</strong> child #4, and no right child.</p>
+            <svg viewBox="0 0 220 170" aria-hidden="true">
+              <line x1="110" y1="8" x2="110" y2="162" stroke="#1f6b5a" stroke-dasharray="4 5" stroke-width="1.5"/>
+              <line x1="110" y1="32" x2="55" y2="78" stroke="#3b342c" stroke-width="2"/>
+              <line x1="110" y1="32" x2="165" y2="78" stroke="#3b342c" stroke-width="2"/>
+              <line x1="55" y1="94" x2="28" y2="138" stroke="#2563eb" stroke-width="2.5"/>
+              <circle cx="110" cy="24" r="14" fill="#fffdf8" stroke="#1c1915" stroke-width="2"/>
+              <text x="110" y="28" text-anchor="middle" font-family="Fraunces,serif" font-size="13" font-weight="700">1</text>
+              <circle cx="55" cy="86" r="14" fill="#dbe7ff" stroke="#2563eb" stroke-width="2"/>
+              <text x="55" y="90" text-anchor="middle" font-family="Fraunces,serif" font-size="13" font-weight="700">2</text>
+              <circle cx="165" cy="86" r="14" fill="#eee4ff" stroke="#7c3aed" stroke-width="2"/>
+              <text x="165" y="90" text-anchor="middle" font-family="Fraunces,serif" font-size="13" font-weight="700">2</text>
+              <circle cx="28" cy="150" r="14" fill="#dbe7ff" stroke="#2563eb" stroke-width="2"/>
+              <text x="28" y="154" text-anchor="middle" font-family="Fraunces,serif" font-size="13" font-weight="700">3</text>
+              <text x="78" y="148" font-family="IBM Plex Mono,monospace" font-size="9" fill="#2563eb">#4 = left arm of 2</text>
+            </svg>
+          </div>
+          <div class="build-step">
+            <div class="num">Step 3 · line 3</div>
+            <p><span class="in-line">2  −1  5</span><br />#3 has <strong>no left</strong> child, and a <strong>right</strong> child #5.</p>
+            <svg viewBox="0 0 220 170" aria-hidden="true">
+              <line x1="110" y1="8" x2="110" y2="162" stroke="#1f6b5a" stroke-dasharray="4 5" stroke-width="1.5"/>
+              <line x1="110" y1="32" x2="55" y2="78" stroke="#3b342c" stroke-width="2"/>
+              <line x1="110" y1="32" x2="165" y2="78" stroke="#3b342c" stroke-width="2"/>
+              <line x1="55" y1="94" x2="28" y2="138" stroke="#2563eb" stroke-width="2.5"/>
+              <line x1="165" y1="94" x2="192" y2="138" stroke="#7c3aed" stroke-width="2.5"/>
+              <circle cx="110" cy="24" r="14" fill="#fffdf8" stroke="#1c1915" stroke-width="2"/>
+              <text x="110" y="28" text-anchor="middle" font-family="Fraunces,serif" font-size="13" font-weight="700">1</text>
+              <circle cx="55" cy="86" r="14" fill="#dbe7ff" stroke="#2563eb" stroke-width="2"/>
+              <text x="55" y="90" text-anchor="middle" font-family="Fraunces,serif" font-size="13" font-weight="700">2</text>
+              <circle cx="165" cy="86" r="14" fill="#eee4ff" stroke="#7c3aed" stroke-width="2"/>
+              <text x="165" y="90" text-anchor="middle" font-family="Fraunces,serif" font-size="13" font-weight="700">2</text>
+              <circle cx="28" cy="150" r="14" fill="#dbe7ff" stroke="#2563eb" stroke-width="2"/>
+              <text x="28" y="154" text-anchor="middle" font-family="Fraunces,serif" font-size="13" font-weight="700">3</text>
+              <circle cx="192" cy="150" r="14" fill="#eee4ff" stroke="#7c3aed" stroke-width="2"/>
+              <text x="192" y="154" text-anchor="middle" font-family="Fraunces,serif" font-size="13" font-weight="700">3</text>
+              <text x="70" y="148" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="9" fill="#7c3aed">right arm of 3 = #5</text>
+            </svg>
+          </div>
+          <div class="build-step">
+            <div class="num">Step 4 · leaves</div>
+            <p><span class="in-line">3 −1 −1</span> twice. #4 and #5 are leaves — no further children.</p>
+            <svg viewBox="0 0 220 170" aria-hidden="true">
+              <line x1="110" y1="8" x2="110" y2="162" stroke="#1f6b5a" stroke-dasharray="4 5" stroke-width="1.5"/>
+              <line x1="110" y1="32" x2="55" y2="78" stroke="#3b342c" stroke-width="2"/>
+              <line x1="110" y1="32" x2="165" y2="78" stroke="#3b342c" stroke-width="2"/>
+              <line x1="55" y1="94" x2="28" y2="138" stroke="#2563eb" stroke-width="2.5"/>
+              <line x1="165" y1="94" x2="192" y2="138" stroke="#7c3aed" stroke-width="2.5"/>
+              <circle cx="110" cy="24" r="14" fill="#fffdf8" stroke="#1c1915" stroke-width="2"/>
+              <text x="110" y="28" text-anchor="middle" font-family="Fraunces,serif" font-size="13" font-weight="700">1</text>
+              <circle cx="55" cy="86" r="14" fill="#dbe7ff" stroke="#2563eb" stroke-width="2"/>
+              <text x="55" y="90" text-anchor="middle" font-family="Fraunces,serif" font-size="13" font-weight="700">2</text>
+              <circle cx="165" cy="86" r="14" fill="#eee4ff" stroke="#7c3aed" stroke-width="2"/>
+              <text x="165" y="90" text-anchor="middle" font-family="Fraunces,serif" font-size="13" font-weight="700">2</text>
+              <circle cx="28" cy="150" r="14" fill="#d8f3e3" stroke="#1b7a4a" stroke-width="2"/>
+              <text x="28" y="154" text-anchor="middle" font-family="Fraunces,serif" font-size="13" font-weight="700">3</text>
+              <circle cx="192" cy="150" r="14" fill="#d8f3e3" stroke="#1b7a4a" stroke-width="2"/>
+              <text x="192" y="154" text-anchor="middle" font-family="Fraunces,serif" font-size="13" font-weight="700">3</text>
+            </svg>
+          </div>
+        </div>
+
+        <div class="fold-row">
+          <div class="fold-card">
+            <h4>Before folding — two arms, opposite sides</h4>
+            <svg viewBox="0 0 360 210" aria-label="Example 1 before fold">
+              <line x1="180" y1="8" x2="180" y2="200" stroke="#1f6b5a" stroke-dasharray="5 6" stroke-width="1.8"/>
+              <text x="188" y="22" font-family="IBM Plex Mono,monospace" font-size="11" fill="#1f6b5a">fold here</text>
+              <line x1="180" y1="40" x2="90" y2="95" stroke="#3b342c" stroke-width="2"/>
+              <line x1="180" y1="40" x2="270" y2="95" stroke="#3b342c" stroke-width="2"/>
+              <line x1="90" y1="112" x2="40" y2="165" stroke="#2563eb" stroke-width="3"/>
+              <line x1="270" y1="112" x2="320" y2="165" stroke="#7c3aed" stroke-width="3"/>
+              <circle cx="180" cy="32" r="16" fill="#fffdf8" stroke="#1c1915" stroke-width="2"/>
+              <text x="180" y="37" text-anchor="middle" font-family="Fraunces,serif" font-size="15" font-weight="700">1</text>
+              <circle cx="90" cy="104" r="16" fill="#dbe7ff" stroke="#2563eb" stroke-width="2"/>
+              <text x="90" y="109" text-anchor="middle" font-family="Fraunces,serif" font-size="15" font-weight="700">2</text>
+              <circle cx="270" cy="104" r="16" fill="#eee4ff" stroke="#7c3aed" stroke-width="2"/>
+              <text x="270" y="109" text-anchor="middle" font-family="Fraunces,serif" font-size="15" font-weight="700">2</text>
+              <circle cx="40" cy="178" r="16" fill="#dbe7ff" stroke="#2563eb" stroke-width="2"/>
+              <text x="40" y="183" text-anchor="middle" font-family="Fraunces,serif" font-size="15" font-weight="700">3</text>
+              <circle cx="320" cy="178" r="16" fill="#eee4ff" stroke="#7c3aed" stroke-width="2"/>
+              <text x="320" y="183" text-anchor="middle" font-family="Fraunces,serif" font-size="15" font-weight="700">3</text>
+              <text x="8" y="128" fill="#2563eb" class="arm-tag" font-family="IBM Plex Mono,monospace" font-size="11">left arm of #2</text>
+              <text x="248" y="128" fill="#7c3aed" class="arm-tag" font-family="IBM Plex Mono,monospace" font-size="11">right arm of #3</text>
+            </svg>
+            <p>
+              #4 hangs off the <strong>left</strong> of #2 (far left of the page).
+              #5 hangs off the <strong>right</strong> of #3 (far right of the page).
+              Empty inner slots (right of #2, left of #3) also face each other across the fold.
+            </p>
+          </div>
+          <div class="fold-arrow">fold →</div>
+          <div class="fold-card">
+            <h4>After folding — the left half flips onto the right</h4>
+            <svg viewBox="0 0 280 210" aria-label="Example 1 after fold">
+              <line x1="70" y1="8" x2="70" y2="200" stroke="#1f6b5a" stroke-dasharray="5 6" stroke-width="1.8"/>
+              <text x="78" y="22" font-family="IBM Plex Mono,monospace" font-size="11" fill="#1f6b5a">mirror</text>
+              <line x1="70" y1="40" x2="170" y2="95" stroke="#3b342c" stroke-width="2"/>
+              <line x1="170" y1="112" x2="230" y2="165" stroke="#7c3aed" stroke-width="3"/>
+              <line x1="170" y1="112" x2="230" y2="165" stroke="#2563eb" stroke-width="3" stroke-dasharray="7 5" opacity="0.85"/>
+              <circle cx="70" cy="32" r="16" fill="#fffdf8" stroke="#1c1915" stroke-width="2"/>
+              <text x="70" y="37" text-anchor="middle" font-family="Fraunces,serif" font-size="15" font-weight="700">1</text>
+              <circle cx="170" cy="104" r="18" fill="#e8e4ff" stroke="#5b21b6" stroke-width="2"/>
+              <text x="170" y="100" text-anchor="middle" font-family="Fraunces,serif" font-size="14" font-weight="700">2</text>
+              <text x="170" y="116" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#5c574e">#2 landed on #3</text>
+              <circle cx="230" cy="178" r="18" fill="#d8f3e3" stroke="#1b7a4a" stroke-width="2"/>
+              <text x="230" y="174" text-anchor="middle" font-family="Fraunces,serif" font-size="14" font-weight="700">3</text>
+              <text x="230" y="190" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#1b7a4a">#4 landed on #5</text>
+            </svg>
+            <p>
+              Folding is a left–right flip around the dashed line. The far-left circle (#4)
+              must land on the far-right circle (#5). That is exactly
+              <strong>left child of 2 ↔ right child of 3</strong>.
+              Both hold value 3, so they match. YES.
+            </p>
+          </div>
+        </div>
+        <p class="primer-intro">
+          Example 2 fails for the same reason: both #2 and #3 hang a child on the <em>same</em> side
+          (both to the right). After the fold, a circle would try to land on an empty slot.
+        </p>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title">
+        <h2>Examples</h2>
+        <span class="hint">Original contest cases plus extra shapes. Click one to load it.</span>
+      </div>
+      <div class="examples" id="exampleGrid"></div>
+    </section>
+
+    <section>
+      <div class="section-title">
+        <h2>Watch the check</h2>
+        <span class="hint">Step through the stack, or fold the left side onto the right.</span>
+      </div>
+      <div class="stage">
+        <div class="canvas">
+          <div class="canvas-head">
+            <h3 id="treeTitle">Example 1</h3>
+            <div id="verdict" class="verdict pending">not started</div>
+          </div>
+          <svg id="treeSvg" viewBox="0 0 800 480" role="img" aria-label="Binary tree"></svg>
+          <div class="controls">
+            <button class="primary" id="btnStep" type="button">Step</button>
+            <button id="btnPlay" type="button">Play</button>
+            <button id="btnReset" type="button">Reset</button>
+            <button id="btnFold" type="button">Fold left → right</button>
+            <label class="speed">Speed
+              <input id="speed" type="range" min="250" max="1400" value="750" />
+            </label>
+          </div>
+        </div>
+        <aside class="side">
+          <div class="side-head"><h3>Algorithm log</h3><span class="hint" id="stepCount">step 0</span></div>
+          <div class="side-body">
+            <div class="step-box">
+              <div class="meta" id="stepMeta">Ready</div>
+              <p id="stepText">Press Step or Play. The first pair is always the root’s two children.</p>
+              <div class="stack-list" id="stackList"></div>
+            </div>
+            <div class="why">
+              <h4>Why this works</h4>
+              <ol>
+                <li>Push <code>(left[1], right[1])</code>.</li>
+                <li>Pop a pair <code>(a, b)</code>.</li>
+                <li>If both are −1, skip. If one is missing or values differ, return NO.</li>
+                <li>Otherwise push the outer pair <code>(left[a], right[b])</code> and the inner pair <code>(right[a], left[b])</code>.</li>
+                <li>Empty stack → YES. Iterative, because n can be 2·10⁵.</li>
+              </ol>
+            </div>
+            <div class="legend">
+              <span><i class="swatch" style="background:#dbe7ff;border-color:#2563eb"></i>current a</span>
+              <span><i class="swatch" style="background:#eee4ff;border-color:#7c3aed"></i>current b</span>
+              <span><i class="swatch" style="background:#d8f3e3;border-color:#1b7a4a"></i>matched</span>
+              <span><i class="swatch" style="background:#fde2df;border-color:#b42318"></i>failed</span>
+              <span>Click a node to edit its value</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title">
+        <h2>Try your own tree</h2>
+        <span class="hint">Same format as the contest: n, then n lines <code>value left right</code>.</span>
+      </div>
+      <div class="builder">
+        <div>
+          <textarea id="inputBox" spellcheck="false"></textarea>
+          <div class="controls" style="padding-left:0;border:0">
+            <button class="primary" id="btnLoad" type="button">Load input</button>
+            <button id="btnRandomYes" type="button">Random YES tree</button>
+            <button id="btnRandomNo" type="button">Random NO tree</button>
+          </div>
+        </div>
+        <div class="side" style="box-shadow:none">
+          <div class="side-head"><h3>How to read the input</h3></div>
+          <div class="side-body">
+            <ol class="help-list">
+              <li>Line 1 is <strong>n</strong>, the number of vertices.</li>
+              <li>Line i+1 describes vertex <strong>i</strong> (1-based): value, left-child index, right-child index.</li>
+              <li>Use <strong>−1</strong> when a child does not exist. Root is always vertex 1.</li>
+              <li>Keys: <kbd>Space</kbd> / <kbd>→</kbd> step, <kbd>P</kbd> play, <kbd>R</kbd> reset, <kbd>F</kbd> fold.</li>
+            </ol>
+            <p class="rule-note" style="margin-top:14px">After loading, click any node in the tree to change its value and immediately re-check symmetry.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      Interactive explainer for <code>Q51_Mirror_Symmetric_Tree.java</code>. The check is the same iterative pair walk used in the solution.
+    </footer>
+  </div>
+
+  <div class="popover" id="editPop">
+    <label>Value<br /><input id="editVal" type="number" /></label>
+  </div>
+
+  <script>
+    const MISSING = -1;
+
+    const EXAMPLES = [
+      {
+        id: "ex1",
+        title: "Example 1",
+        tag: "YES",
+        blurb: "Outer leaves 3 and 3; empty inner slots match.",
+        n: 5,
+        val: [0, 1, 2, 2, 3, 3],
+        left: [0, 2, 4, -1, -1, -1],
+        right: [0, 3, -1, 5, -1, -1]
+      },
+      {
+        id: "ex2",
+        title: "Example 2",
+        tag: "NO",
+        blurb: "Both inner nodes have a right child — not a mirror.",
+        n: 5,
+        val: [0, 1, 2, 2, 3, 3],
+        left: [0, 2, -1, -1, -1, -1],
+        right: [0, 3, 4, 5, -1, -1]
+      },
+      {
+        id: "ex3",
+        title: "Example 3",
+        tag: "YES",
+        blurb: "Full palindrome: 1-3 on the left becomes 3-1 on the right.",
+        n: 7,
+        val: [0, 1, 2, 2, 1, 3, 3, 1],
+        left: [0, 2, 4, 6, -1, -1, -1, -1],
+        right: [0, 3, 5, 7, -1, -1, -1, -1]
+      },
+      {
+        id: "single",
+        title: "Single node",
+        tag: "YES",
+        blurb: "No children to compare. Vacuously symmetric.",
+        n: 1,
+        val: [0, 7],
+        left: [0, -1],
+        right: [0, -1]
+      },
+      {
+        id: "twins",
+        title: "Matching twins",
+        tag: "YES",
+        blurb: "Root with two equal leaves.",
+        n: 3,
+        val: [0, 1, 5, 5],
+        left: [0, 2, -1, -1],
+        right: [0, 3, -1, -1]
+      },
+      {
+        id: "one-arm",
+        title: "Only a left child",
+        tag: "NO",
+        blurb: "Right side is empty, left is not.",
+        n: 2,
+        val: [0, 1, 4],
+        left: [0, 2, -1],
+        right: [0, -1, -1]
+      },
+      {
+        id: "values",
+        title: "Value mismatch",
+        tag: "NO",
+        blurb: "Shape is symmetric, values 2 vs 9 are not.",
+        n: 3,
+        val: [0, 1, 2, 9],
+        left: [0, 2, -1, -1],
+        right: [0, 3, -1, -1]
+      },
+      {
+        id: "deep",
+        title: "Deeper palindrome",
+        tag: "YES",
+        blurb: "Three levels: 4-2-6 mirrors 4-6-2.",
+        n: 7,
+        val: [0, 8, 4, 4, 2, 6, 6, 2],
+        left: [0, 2, 4, 6, -1, -1, -1, -1],
+        right: [0, 3, 5, 7, -1, -1, -1, -1]
+      },
+      {
+        id: "inner",
+        title: "Missing inner twin",
+        tag: "NO",
+        blurb: "Left has two children; right is missing the inner one.",
+        n: 6,
+        val: [0, 1, 2, 2, 3, 4, 3],
+        left: [0, 2, 4, -1, -1, -1, -1],
+        right: [0, 3, 5, 6, -1, -1, -1]
+      },
+      {
+        id: "inner-yes",
+        title: "Inner mirrors",
+        tag: "YES",
+        blurb: "Contrast with Example 2: left’s right child matches right’s left child.",
+        n: 5,
+        val: [0, 1, 2, 2, 7, 7],
+        left: [0, 2, -1, 5, -1, -1],
+        right: [0, 3, 4, -1, -1, -1]
+      },
+      {
+        id: "uneven-depth",
+        title: "Uneven depth",
+        tag: "YES",
+        blurb: "Long outer arms: left-left mirrors right-right.",
+        n: 5,
+        val: [0, 9, 4, 4, 2, 2],
+        left: [0, 2, 4, -1, -1, -1],
+        right: [0, 3, -1, 5, -1, -1]
+      },
+      {
+        id: "chain",
+        title: "Left spine",
+        tag: "NO",
+        blurb: "A chain is never a mirror unless it is a single node.",
+        n: 4,
+        val: [0, 1, 2, 3, 4],
+        left: [0, 2, 3, 4, -1],
+        right: [0, -1, -1, -1, -1]
+      }
+    ];
+
+    const state = {
+      title: "",
+      n: 0,
+      val: [],
+      left: [],
+      right: [],
+      steps: [],
+      i: -1,
+      playing: false,
+      timer: null,
+      matched: new Set(),
+      current: null,
+      fail: null,
+      pos: {},
+      editId: null
+    };
+
+    const svg = document.getElementById("treeSvg");
+    const exampleGrid = document.getElementById("exampleGrid");
+    const inputBox = document.getElementById("inputBox");
+    const editPop = document.getElementById("editPop");
+    const editVal = document.getElementById("editVal");
+
+    function cloneExample(ex) {
+      return {
+        title: ex.title,
+        n: ex.n,
+        val: ex.val.slice(),
+        left: ex.left.slice(),
+        right: ex.right.slice()
+      };
+    }
+
+    function toInput(tree) {
+      const lines = [String(tree.n)];
+      for (let i = 1; i <= tree.n; i++) {
+        lines.push(`${tree.val[i]} ${tree.left[i]} ${tree.right[i]}`);
+      }
+      return lines.join("\n");
+    }
+
+    function parseInput(text) {
+      const tokens = text.trim().split(/\s+/).map(Number);
+      if (!tokens.length || Number.isNaN(tokens[0])) throw new Error("Need n on the first line.");
+      const n = tokens[0];
+      if (tokens.length !== 1 + 3 * n) throw new Error(`Expected ${1 + 3 * n} numbers (n and ${n} triples).`);
+      const val = [0], left = [0], right = [0];
+      for (let i = 0; i < n; i++) {
+        val.push(tokens[1 + 3 * i]);
+        left.push(tokens[2 + 3 * i]);
+        right.push(tokens[3 + 3 * i]);
+      }
+      return { title: "Custom tree", n, val, left, right };
+    }
+
+    function buildSteps(val, left, right) {
+      const steps = [];
+      const stack = [[left[1], right[1]]];
+      steps.push({
+        kind: "start",
+        a: left[1],
+        b: right[1],
+        stack: stack.map(p => p.slice()),
+        text: "Start with the root’s children: left(1) vs right(1).",
+        matched: [],
+        fail: null
+      });
+      const matched = [];
+      while (stack.length) {
+        const [a, b] = stack.pop();
+        if (a === MISSING && b === MISSING) {
+          steps.push({
+            kind: "skip",
+            a, b,
+            stack: stack.map(p => p.slice()),
+            text: "Both missing — this pair is still a match. Continue.",
+            matched: matched.slice(),
+            fail: null
+          });
+          continue;
+        }
+        if (a === MISSING || b === MISSING || val[a] !== val[b]) {
+          let why;
+          if (a === MISSING || b === MISSING) why = "One node is missing and the other exists — structure is not mirrored.";
+          else why = `Values differ: ${val[a]} ≠ ${val[b]}.`;
+          steps.push({
+            kind: "fail",
+            a, b,
+            stack: stack.map(p => p.slice()),
+            text: `NO. Comparing ${labelPair(a, b, val)} — ${why}`,
+            matched: matched.slice(),
+            fail: { a, b }
+          });
+          return steps;
+        }
+        matched.push(a, b);
+        stack.push([left[a], right[b]]);
+        stack.push([right[a], left[b]]);
+        steps.push({
+          kind: "match",
+          a, b,
+          stack: stack.map(p => p.slice()),
+          text: `${labelPair(a, b, val)} match. Push outer (left[a], right[b]) and inner (right[a], left[b]).`,
+          matched: matched.slice(),
+          fail: null
+        });
+      }
+      steps.push({
+        kind: "yes",
+        a: null,
+        b: null,
+        stack: [],
+        text: "Stack is empty. Every pair matched — YES.",
+        matched: matched.slice(),
+        fail: null
+      });
+      return steps;
+    }
+
+    function labelPair(a, b, val) {
+      const la = a === MISSING ? "∅" : `#${a}=${val[a]}`;
+      const lb = b === MISSING ? "∅" : `#${b}=${val[b]}`;
+      return `${la} ↔ ${lb}`;
+    }
+
+    function layout(tree) {
+      const pos = {};
+      let x = 0;
+      function dfs(i, depth) {
+        if (i === MISSING) return;
+        dfs(tree.left[i], depth + 1);
+        pos[i] = { x: x++, y: depth, id: i };
+        dfs(tree.right[i], depth + 1);
+      }
+      dfs(1, 0);
+      if (!pos[1]) pos[1] = { x: 0, y: 0, id: 1 };
+
+      const xs = Object.values(pos).map(p => p.x);
+      const ys = Object.values(pos).map(p => p.y);
+      const minX = Math.min(...xs), maxX = Math.max(...xs);
+      const maxY = Math.max(...ys);
+      const padX = 70, padY = 56;
+      const innerW = 800 - padX * 2;
+      const innerH = 480 - padY * 2 - 20;
+      const spanX = Math.max(1, maxX - minX);
+      const spanY = Math.max(1, maxY);
+      Object.values(pos).forEach(p => {
+        p.px = padX + ((p.x - minX) / spanX) * innerW;
+        p.py = padY + (maxY === 0 ? innerH / 3 : (p.y / spanY) * innerH);
+      });
+      return pos;
+    }
+
+    function applyStep(idx) {
+      state.i = idx;
+      if (idx < 0) {
+        state.current = null;
+        state.matched = new Set();
+        state.fail = null;
+        renderAll();
+        return;
+      }
+      const step = state.steps[idx];
+      state.current = (step.a != null || step.b != null) ? { a: step.a, b: step.b } : null;
+      state.matched = new Set(step.matched);
+      state.fail = step.fail;
+      renderAll();
+    }
+
+    function nodeClass(id) {
+      if (state.fail && (id === state.fail.a || id === state.fail.b)) return "fail";
+      if (state.current && id === state.current.a) return "current-a";
+      if (state.current && id === state.current.b) return "current-b";
+      if (state.matched.has(id)) return "match";
+      const last = state.steps[state.i];
+      if (last && last.kind === "yes") return "done";
+      return "";
+    }
+
+    function renderTree() {
+      const pos = layout(state);
+      state.pos = pos;
+      const axisX = pos[1].px;
+      const ns = "http://www.w3.org/2000/svg";
+      while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+      const axis = document.createElementNS(ns, "line");
+      axis.setAttribute("x1", axisX);
+      axis.setAttribute("x2", axisX);
+      axis.setAttribute("y1", 18);
+      axis.setAttribute("y2", 460);
+      axis.setAttribute("class", "axis");
+      svg.appendChild(axis);
+
+      const axisLabel = document.createElementNS(ns, "text");
+      axisLabel.setAttribute("x", axisX + 8);
+      axisLabel.setAttribute("y", 32);
+      axisLabel.setAttribute("class", "axis-label");
+      axisLabel.textContent = "MIRROR";
+      svg.appendChild(axisLabel);
+
+      for (let i = 1; i <= state.n; i++) {
+        const p = pos[i];
+        for (const [child, side] of [[state.left[i], "left"], [state.right[i], "right"]]) {
+          if (child === MISSING) continue;
+          const c = pos[child];
+          const e = document.createElementNS(ns, "path");
+          const midY = (p.py + c.py) / 2;
+          e.setAttribute("d", `M ${p.px} ${p.py + 18} C ${p.px} ${midY}, ${c.px} ${midY}, ${c.px} ${c.py - 18}`);
+          e.setAttribute("class", "edge");
+          svg.appendChild(e);
+        }
+      }
+
+      if (state.current) {
+        const { a, b } = state.current;
+        if (a !== MISSING && b !== MISSING && pos[a] && pos[b]) {
+          const link = document.createElementNS(ns, "path");
+          link.setAttribute("d", `M ${pos[a].px} ${pos[a].py} C ${axisX} ${pos[a].py}, ${axisX} ${pos[b].py}, ${pos[b].px} ${pos[b].py}`);
+          link.setAttribute("class", "link-pair");
+          link.setAttribute("stroke", "#4f46e5");
+          svg.appendChild(link);
+        }
+        drawGhostIfMissing(a, b, pos, ns, svg);
+        drawGhostIfMissing(b, a, pos, ns, svg);
+      }
+
+      for (let i = 1; i <= state.n; i++) {
+        const p = pos[i];
+        const g = document.createElementNS(ns, "g");
+        g.setAttribute("class", "node-hit");
+        g.dataset.id = String(i);
+        g.setAttribute("role", "button");
+        g.setAttribute("tabindex", "0");
+        const title = document.createElementNS(ns, "title");
+        title.textContent = `Vertex ${i}: value ${state.val[i]}, left ${state.left[i]}, right ${state.right[i]}`;
+        g.appendChild(title);
+
+        const c = document.createElementNS(ns, "circle");
+        c.setAttribute("cx", p.px);
+        c.setAttribute("cy", p.py);
+        c.setAttribute("r", 22);
+        c.setAttribute("class", `node-circle ${nodeClass(i)}`);
+        const idx = document.createElementNS(ns, "text");
+        idx.setAttribute("x", p.px);
+        idx.setAttribute("y", p.py - 30);
+        idx.setAttribute("class", "node-idx");
+        idx.textContent = `#${i}`;
+        const val = document.createElementNS(ns, "text");
+        val.setAttribute("x", p.px);
+        val.setAttribute("y", p.py);
+        val.setAttribute("class", "node-val");
+        val.textContent = String(state.val[i]);
+        g.appendChild(c);
+        g.appendChild(idx);
+        g.appendChild(val);
+        g.addEventListener("click", (ev) => openEditor(i, ev));
+        svg.appendChild(g);
+      }
+    }
+
+    function drawGhostIfMissing(missing, other, pos, ns, svgEl) {
+      if (missing !== MISSING || other === MISSING || !pos[other]) return;
+      const p = pos[other];
+      const axisX = pos[1].px;
+      const gx = 2 * axisX - p.px;
+      const gy = p.py;
+      const e = document.createElementNS(ns, "path");
+      e.setAttribute("d", `M ${p.px} ${p.py} L ${gx} ${gy}`);
+      e.setAttribute("class", "ghost-edge");
+      svgEl.appendChild(e);
+      const c = document.createElementNS(ns, "circle");
+      c.setAttribute("cx", gx);
+      c.setAttribute("cy", gy);
+      c.setAttribute("r", 18);
+      c.setAttribute("class", "ghost");
+      const t = document.createElementNS(ns, "text");
+      t.setAttribute("x", gx);
+      t.setAttribute("y", gy);
+      t.setAttribute("class", "ghost-x");
+      t.textContent = "∅";
+      svgEl.appendChild(c);
+      svgEl.appendChild(t);
+    }
+
+    function renderLog() {
+      const meta = document.getElementById("stepMeta");
+      const text = document.getElementById("stepText");
+      const stackList = document.getElementById("stackList");
+      const stepCount = document.getElementById("stepCount");
+      const verdict = document.getElementById("verdict");
+      document.getElementById("treeTitle").textContent = state.title;
+
+      if (state.i < 0) {
+        meta.textContent = "Ready";
+        text.textContent = "Press Step or Play. The first pair is always the root’s two children.";
+        stackList.innerHTML = "";
+        stepCount.textContent = "step 0";
+        verdict.className = "verdict pending";
+        verdict.textContent = "not started";
+        return;
+      }
+      const step = state.steps[state.i];
+      meta.textContent = step.kind.toUpperCase();
+      text.textContent = step.text;
+      stepCount.textContent = `step ${state.i + 1} / ${state.steps.length}`;
+      stackList.innerHTML = "";
+      if (!step.stack.length) {
+        const empty = document.createElement("span");
+        empty.className = "stack-item";
+        empty.textContent = "stack empty";
+        stackList.appendChild(empty);
+      } else {
+        step.stack.slice().reverse().forEach((pair, idx) => {
+          const el = document.createElement("span");
+          el.className = "stack-item" + (idx === 0 ? " now" : "");
+          el.textContent = `(${pair[0]}, ${pair[1]})`;
+          stackList.appendChild(el);
+        });
+      }
+      if (step.kind === "yes") {
+        verdict.className = "verdict yes";
+        verdict.textContent = "YES";
+      } else if (step.kind === "fail") {
+        verdict.className = "verdict no";
+        verdict.textContent = "NO";
+      } else {
+        verdict.className = "verdict pending";
+        verdict.textContent = "checking…";
+      }
+    }
+
+    function renderAll() {
+      renderTree();
+      renderLog();
+    }
+
+    function loadTree(tree, silent) {
+      stopPlay();
+      editPop.style.display = "none";
+      state.title = tree.title;
+      state.n = tree.n;
+      state.val = tree.val.slice();
+      state.left = tree.left.slice();
+      state.right = tree.right.slice();
+      state.steps = buildSteps(state.val, state.left, state.right);
+      state.i = -1;
+      state.matched = new Set();
+      state.current = null;
+      state.fail = null;
+      if (!silent) inputBox.value = toInput(tree);
+      applyStep(-1);
+    }
+
+    function stepOnce() {
+      if (state.i >= state.steps.length - 1) {
+        stopPlay();
+        return;
+      }
+      applyStep(state.i + 1);
+      if (state.i >= state.steps.length - 1) stopPlay();
+    }
+
+    function stopPlay() {
+      state.playing = false;
+      clearInterval(state.timer);
+      state.timer = null;
+      document.getElementById("btnPlay").textContent = "Play";
+    }
+
+    function play() {
+      if (state.playing) { stopPlay(); return; }
+      if (state.i >= state.steps.length - 1) applyStep(-1);
+      state.playing = true;
+      document.getElementById("btnPlay").textContent = "Pause";
+      const tick = () => {
+        stepOnce();
+        if (state.playing) {
+          clearInterval(state.timer);
+          state.timer = setTimeout(tick, Number(document.getElementById("speed").value));
+        }
+      };
+      tick();
+    }
+
+    function fold() {
+      stopPlay();
+      applyStep(state.steps.length - 1);
+      renderTree();
+      requestAnimationFrame(() => {
+        const axisX = state.pos[1].px;
+        svg.querySelectorAll(".node-hit").forEach(g => {
+          const id = Number(g.dataset.id);
+          const p = state.pos[id];
+          if (id !== 1 && p.px < axisX - 0.5) {
+            g.style.transition = "transform 0.75s cubic-bezier(.2,.8,.2,1)";
+            g.style.transform = `translate(${2 * (axisX - p.px)}px, 0)`;
+          }
+        });
+      });
+    }
+
+    function openEditor(id, ev) {
+      ev.stopPropagation();
+      state.editId = id;
+      const rect = svg.getBoundingClientRect();
+      const p = state.pos[id];
+      const scaleX = rect.width / 800;
+      const scaleY = rect.height / 480;
+      editPop.style.display = "block";
+      editPop.style.left = `${rect.left + p.px * scaleX - 40}px`;
+      editPop.style.top = `${rect.top + p.py * scaleY + 28}px`;
+      editVal.value = String(state.val[id]);
+      editVal.focus();
+      editVal.select();
+    }
+
+    function commitEdit() {
+      if (state.editId == null) return;
+      const v = Number(editVal.value);
+      if (!Number.isNaN(v)) {
+        state.val[state.editId] = v;
+        state.title = state.title.endsWith("(edited)") ? state.title : state.title + " (edited)";
+        inputBox.value = toInput(state);
+        state.steps = buildSteps(state.val, state.left, state.right);
+        applyStep(-1);
+      }
+      state.editId = null;
+      editPop.style.display = "none";
+    }
+
+    function flatten(root) {
+      const val = [0], left = [0], right = [0];
+      function walk(node) {
+        if (!node) return MISSING;
+        const id = val.length;
+        val.push(node.val);
+        left.push(0);
+        right.push(0);
+        left[id] = walk(node.left);
+        right[id] = walk(node.right);
+        return id;
+      }
+      walk(root);
+      return { n: val.length - 1, val, left, right };
+    }
+
+    function mirrorCopy(node) {
+      if (!node) return null;
+      return { val: node.val, left: mirrorCopy(node.right), right: mirrorCopy(node.left) };
+    }
+
+    function randomSubtree(depth, maxDepth) {
+      if (depth >= maxDepth || (depth > 0 && Math.random() < 0.28)) return null;
+      return {
+        val: 1 + Math.floor(Math.random() * 9),
+        left: randomSubtree(depth + 1, maxDepth),
+        right: randomSubtree(depth + 1, maxDepth)
+      };
+    }
+
+    function randomTree(wantYes) {
+      const left = randomSubtree(1, 3) || { val: 1 + Math.floor(Math.random() * 9), left: null, right: null };
+      let right = wantYes ? mirrorCopy(left) : (randomSubtree(1, 3) || { val: 1 + Math.floor(Math.random() * 9), left: null, right: null });
+      if (!wantYes) {
+        // Guarantee a break: either flip a value on the right, or drop a child.
+        const nodes = [];
+        (function collect(n) { if (!n) return; nodes.push(n); collect(n.left); collect(n.right); })(right);
+        if (!nodes.length) right = { val: 1 + Math.floor(Math.random() * 9), left: null, right: null };
+        else if (Math.random() < 0.5) nodes[0].val = (nodes[0].val % 9) + 1;
+        else nodes[0].left = null;
+      }
+      const root = { val: 1 + Math.floor(Math.random() * 9), left, right };
+      const flat = flatten(root);
+      flat.title = wantYes ? "Random YES tree" : "Random NO tree";
+      return flat;
+    }
+
+    function renderExampleCards() {
+      exampleGrid.innerHTML = "";
+      EXAMPLES.forEach((ex, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "ex" + (idx === 0 ? " active" : "");
+        btn.type = "button";
+        btn.innerHTML = `<div class="ex-top"><h3>${ex.title}</h3><span class="pill ${ex.tag === "YES" ? "yes" : "no"}">${ex.tag}</span></div><p>${ex.blurb}</p>`;
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".ex").forEach(el => el.classList.remove("active"));
+          btn.classList.add("active");
+          loadTree(cloneExample(ex));
+        });
+        exampleGrid.appendChild(btn);
+      });
+    }
+
+    document.getElementById("btnStep").addEventListener("click", () => { stopPlay(); stepOnce(); });
+    document.getElementById("btnPlay").addEventListener("click", play);
+    document.getElementById("btnReset").addEventListener("click", () => applyStep(-1));
+    document.getElementById("btnFold").addEventListener("click", fold);
+    document.getElementById("btnLoad").addEventListener("click", () => {
+      try {
+        const tree = parseInput(inputBox.value);
+        document.querySelectorAll(".ex").forEach(el => el.classList.remove("active"));
+        loadTree(tree, true);
+      } catch (err) {
+        alert(err.message);
+      }
+    });
+    document.getElementById("btnRandomYes").addEventListener("click", () => {
+      document.querySelectorAll(".ex").forEach(el => el.classList.remove("active"));
+      loadTree(randomTree(true));
+    });
+    document.getElementById("btnRandomNo").addEventListener("click", () => {
+      document.querySelectorAll(".ex").forEach(el => el.classList.remove("active"));
+      loadTree(randomTree(false));
+    });
+    editVal.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") commitEdit();
+      if (e.key === "Escape") { state.editId = null; editPop.style.display = "none"; }
+    });
+    editVal.addEventListener("blur", commitEdit);
+    document.addEventListener("click", (e) => {
+      if (!editPop.contains(e.target)) {
+        if (state.editId != null) commitEdit();
+      }
+    });
+    document.addEventListener("keydown", (e) => {
+      if (["INPUT", "TEXTAREA"].includes(e.target.tagName)) return;
+      if (e.key === " " || e.key === "ArrowRight") { e.preventDefault(); stopPlay(); stepOnce(); }
+      if (e.key === "p" || e.key === "P") play();
+      if (e.key === "r" || e.key === "R") applyStep(-1);
+      if (e.key === "f" || e.key === "F") fold();
+    });
+
+    renderExampleCards();
+    loadTree(cloneExample(EXAMPLES[0]));
+  </script>
+</body>
+</html>

@@ -1,5 +1,7 @@
 # Q34: Distance from a Point to a Plane
 
+**Тема:** Линейная алгебра
+
 ## Problem Statement
 
 **Russian:** Найти расстояние от точки $(1, 2, 3)$ до плоскости, заданной уравнением $x - 2y + 2z = 6$.

@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Q52 — Fastest Kilometer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f3efe6;
+      --ink: #1c1915;
+      --muted: #5c574e;
+      --card: rgba(255, 252, 247, 0.86);
+      --line: #d9d1c3;
+      --accent: #9a3412;
+      --window: #1d4ed8;
+      --best: #b45309;
+      --yes: #1b7a4a;
+      --no: #b42318;
+      --shadow: 0 18px 50px rgba(40, 28, 12, 0.12);
+      --radius: 18px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: "Source Sans 3", system-ui, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(1100px 520px at 8% -12%, #f8e0c8 0%, transparent 55%),
+        radial-gradient(900px 480px at 100% 0%, #fde7c3 0%, transparent 48%),
+        var(--bg);
+      min-height: 100vh;
+    }
+    .wrap { max-width: 1180px; margin: 0 auto; padding: 28px 20px 80px; }
+    header.hero {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: end;
+      margin-bottom: 28px;
+    }
+    .kicker {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 500;
+    }
+    h1 {
+      font-family: Fraunces, Georgia, serif;
+      font-size: clamp(2rem, 4vw, 3.15rem);
+      line-height: 1.08;
+      margin: 6px 0 10px;
+      font-weight: 700;
+    }
+    .lede { max-width: 64ch; color: var(--muted); font-size: 1.08rem; margin: 0; }
+    .badge-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+    .badge {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 12px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid var(--line);
+    }
+    .rule-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px 20px;
+      max-width: 360px;
+    }
+    .rule-card h2 { font-size: 0.92rem; margin: 0 0 10px; }
+    .rank { list-style: none; margin: 0; padding: 0; }
+    .rank li {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 10px;
+      align-items: start;
+      margin: 8px 0;
+      font-size: 14px;
+    }
+    .rank b {
+      font-family: Fraunces, Georgia, serif;
+      color: var(--accent);
+    }
+    .rule-note { color: var(--muted); font-size: 13px; margin: 10px 0 0; }
+    section { margin: 28px 0; }
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .section-title h2 {
+      font-family: Fraunces, Georgia, serif;
+      font-size: 1.45rem;
+      margin: 0;
+    }
+    .hint { color: var(--muted); font-size: 0.95rem; }
+    .examples {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+    }
+    .ex {
+      text-align: left;
+      background: var(--card);
+      border: 1.5px solid var(--line);
+      border-radius: 14px;
+      padding: 12px 14px;
+      cursor: pointer;
+      transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s;
+    }
+    .ex:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(40,28,12,.1); }
+    .ex.active { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(154,52,18,.16); }
+    .ex .ex-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+    .ex h3 { margin: 0; font-size: 0.98rem; }
+    .pill {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: #f3e0cc;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+    .ex p { margin: 8px 0 0; color: var(--muted); font-size: 13px; line-height: 1.35; }
+    .stage {
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(280px, 0.85fr);
+      gap: 16px;
+    }
+    .canvas, .side {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .canvas-head, .side-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,.55);
+    }
+    .canvas-head h3, .side-head h3 { margin: 0; font-size: 0.95rem; }
+    .verdict {
+      font-family: Fraunces, Georgia, serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: #efe8dc;
+      color: var(--muted);
+    }
+    .verdict.ready { background: #f3e0cc; color: var(--accent); }
+    .chart-scroll { overflow-x: auto; }
+    #paceSvg { display: block; min-width: 100%; height: 340px; }
+    .bar { fill: #e8d5bc; stroke: #3b342c; stroke-width: 1.2; cursor: pointer; }
+    .bar.in-window { fill: #bfdbfe; stroke: var(--window); stroke-width: 2; }
+    .bar.in-best { fill: #fde68a; stroke: var(--best); stroke-width: 2.4; }
+    .bar.in-both { fill: #fcd9a0; stroke: var(--window); stroke-width: 2.4; }
+    .bar.just-added { fill: #93c5fd; }
+    .bar.just-dropped { fill: #f4efe6; stroke-dasharray: 3 3; }
+    .bar-label, .min-label, .axis-note {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      fill: var(--muted);
+      text-anchor: middle;
+    }
+    .bar-val {
+      font-family: Fraunces, Georgia, serif;
+      font-size: 13px;
+      font-weight: 700;
+      fill: var(--ink);
+      text-anchor: middle;
+    }
+    .goal { stroke: var(--yes); stroke-dasharray: 5 5; stroke-width: 1.4; }
+    .bracket { fill: none; stroke-width: 3; }
+    .ptr {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      font-weight: 500;
+    }
+    .meter-wrap { padding: 10px 16px 0; }
+    .meter-meta {
+      display: flex;
+      justify-content: space-between;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .meter {
+      height: 14px;
+      border-radius: 999px;
+      background: #efe8dc;
+      overflow: hidden;
+      border: 1px solid var(--line);
+    }
+    .meter > i {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, #f59e0b, #b45309);
+      transition: width 0.25s ease, background 0.25s;
+    }
+    .meter.ok > i { background: linear-gradient(90deg, #34d399, #1b7a4a); }
+    .candidates {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 10px 16px 4px;
+    }
+    .cand {
+      flex: 0 0 auto;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 10px;
+      padding: 7px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      text-align: left;
+    }
+    .cand.best { border-color: var(--best); background: #fff7e6; }
+    .cand.hover, .cand:hover { border-color: var(--window); }
+    .cand b { font-family: "IBM Plex Mono", monospace; }
+    .controls { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 16px; border-top: 1px solid var(--line); }
+    button {
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+    button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    button:hover { filter: brightness(1.05); }
+    .speed {
+      display: flex; align-items: center; gap: 8px; margin-left: auto;
+      font-size: 13px; color: var(--muted);
+    }
+    .side-body { padding: 14px 16px 18px; }
+    .step-box {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      min-height: 108px;
+    }
+    .step-box .meta {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .step-box p { margin: 6px 0 0; font-size: 0.98rem; line-height: 1.4; }
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .stat {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 8px 10px;
+    }
+    .stat span { display: block; font-size: 11px; color: var(--muted); }
+    .stat strong { font-family: Fraunces, Georgia, serif; font-size: 1.15rem; }
+    .why { margin-top: 14px; }
+    .why h4 { margin: 0 0 6px; font-size: 0.9rem; }
+    .why ol { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; }
+    .legend { display: flex; flex-wrap: wrap; gap: 10px 14px; margin-top: 14px; font-size: 12px; color: var(--muted); }
+    .swatch { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; border: 1px solid #1c1915; }
+    .builder { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 16px; }
+    textarea {
+      width: 100%;
+      min-height: 160px;
+      resize: vertical;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 13px;
+      line-height: 1.45;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      padding: 12px;
+      background: #fffdf8;
+    }
+    .help-list { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14px; }
+    .help-list li { margin: 6px 0; }
+    kbd {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 5px;
+      padding: 1px 5px;
+    }
+    .popover {
+      position: fixed;
+      z-index: 5;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      padding: 10px;
+      display: none;
+    }
+    .popover input { width: 96px; font-size: 16px; padding: 6px; }
+    footer { margin-top: 36px; color: var(--muted); font-size: 13px; }
+    @media (max-width: 900px) {
+      header.hero, .stage, .builder { grid-template-columns: 1fr; }
+      .rule-card { max-width: none; }
+      .speed { margin-left: 0; width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <div>
+        <div class="kicker">Question 52 · Fastest kilometer · Виталик и марафон</div>
+        <h1>When did the fastest kilometer start?</h1>
+        <p class="lede">
+          Each number is meters run in that minute. Find a contiguous stretch whose
+          sum is at least 1000&nbsp;m, then report its <strong>1-based starting minute</strong>.
+          If several stretches qualify, the tie-breakers on the right decide.
+        </p>
+        <div class="badge-row">
+          <span class="badge">Sliding window</span>
+          <span class="badge">Sum ≥ 1000 m</span>
+          <span class="badge">Output = start minute</span>
+          <span class="badge">Time O(n)</span>
+        </div>
+      </div>
+      <aside class="rule-card">
+        <h2>Pick the winning interval</h2>
+        <ol class="rank">
+          <li><b>1</b><span>Shortest length (fewest minutes).</span></li>
+          <li><b>2</b><span>If tied, largest total meters.</span></li>
+          <li><b>3</b><span>If still tied, the one that started earlier.</span></li>
+        </ol>
+        <p class="rule-note">The two-pointer scan expands right, then shrinks left while the window still covers a kilometer.</p>
+      </aside>
+    </header>
+
+    <section>
+      <div class="section-title">
+        <h2>Examples</h2>
+        <span class="hint">The contest case plus extra runs that isolate each rule. Click to load.</span>
+      </div>
+      <div class="examples" id="exampleGrid"></div>
+    </section>
+
+    <section>
+      <div class="section-title">
+        <h2>Watch the window</h2>
+        <span class="hint">Blue is the current window, gold is the best so far. Click a bar to edit meters.</span>
+      </div>
+      <div class="stage">
+        <div class="canvas">
+          <div class="canvas-head">
+            <h3 id="runTitle">Contest example</h3>
+            <div id="verdict" class="verdict">not started</div>
+          </div>
+          <div class="meter-wrap">
+            <div class="meter-meta">
+              <span id="meterLabel">window sum 0 m</span>
+              <span>goal 1000 m</span>
+            </div>
+            <div class="meter" id="meter"><i id="meterFill"></i></div>
+          </div>
+          <div class="candidates" id="candStrip"></div>
+          <div class="chart-scroll">
+            <svg id="paceSvg" viewBox="0 0 800 340" role="img" aria-label="Meters per minute"></svg>
+          </div>
+          <div class="controls">
+            <button class="primary" id="btnStep" type="button">Step</button>
+            <button id="btnPlay" type="button">Play</button>
+            <button id="btnReset" type="button">Reset</button>
+            <button id="btnFinish" type="button">Show answer</button>
+            <label class="speed">Speed
+              <input id="speed" type="range" min="250" max="1400" value="700" />
+            </label>
+          </div>
+        </div>
+        <aside class="side">
+          <div class="side-head"><h3>Algorithm log</h3><span class="hint" id="stepCount">step 0</span></div>
+          <div class="side-body">
+            <div class="step-box">
+              <div class="meta" id="stepMeta">Ready</div>
+              <p id="stepText">Press Step or Play. The right pointer grows one minute at a time; the left pointer drops minutes that are not needed to keep 1000&nbsp;m.</p>
+            </div>
+            <div class="stats">
+              <div class="stat"><span>left · right</span><strong id="ptrStat">—</strong></div>
+              <div class="stat"><span>window</span><strong id="winStat">—</strong></div>
+              <div class="stat"><span>best start</span><strong id="bestStat">—</strong></div>
+              <div class="stat"><span>best length / sum</span><strong id="bestLenStat">—</strong></div>
+            </div>
+            <div class="why">
+              <h4>Why this works</h4>
+              <ol>
+                <li>Add minute <code>right</code> to the sum.</li>
+                <li>While dropping <code>a[left]</code> still leaves ≥ 1000, move <code>left</code> forward. The window is then the shortest suffix of <code>[0..right]</code> that still covers a kilometer.</li>
+                <li>If the window is valid, keep it when it is shorter, or equally short with more meters (or the same meters but an earlier start).</li>
+                <li>Print <code>bestStart + 1</code>. Left only moves forward, so the whole scan is O(n).</li>
+              </ol>
+            </div>
+            <div class="legend">
+              <span><i class="swatch" style="background:#bfdbfe;border-color:#1d4ed8"></i>current window</span>
+              <span><i class="swatch" style="background:#fde68a;border-color:#b45309"></i>best so far</span>
+              <span><i class="swatch" style="background:#93c5fd;border-color:#1d4ed8"></i>just added</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title">
+        <h2>Try your own run</h2>
+        <span class="hint">One line of integers — meters in each minute, same as the contest input.</span>
+      </div>
+      <div class="builder">
+        <div>
+          <textarea id="inputBox" spellcheck="false"></textarea>
+          <div class="controls" style="padding-left:0;border:0">
+            <button class="primary" id="btnLoad" type="button">Load input</button>
+            <button id="btnRandom" type="button">Random run</button>
+          </div>
+        </div>
+        <div class="side" style="box-shadow:none">
+          <div class="side-head"><h3>How to read it</h3></div>
+          <div class="side-body">
+            <ol class="help-list">
+              <li>Minute 1 is the first number. Output is that 1-based index, not the length.</li>
+              <li>A valid window can be longer than 1000&nbsp;m — you may not drop a minute if that would fall below the goal.</li>
+              <li>Hover a candidate chip under the chart to preview that window.</li>
+              <li>Keys: <kbd>Space</kbd> / <kbd>→</kbd> step, <kbd>P</kbd> play, <kbd>R</kbd> reset, <kbd>A</kbd> answer.</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      Interactive explainer for <code>Q52_Fastest_Kilometer.java</code>. The window walk matches the two-pointer solution.
+    </footer>
+  </div>
+
+  <div class="popover" id="editPop">
+    <label>Meters in this minute<br /><input id="editVal" type="number" min="0" /></label>
+  </div>
+
+  <script>
+    const TARGET = 1000;
+
+    const EXAMPLES = [
+      {
+        id: "contest",
+        title: "Contest example",
+        answer: 3,
+        blurb: "Two 3-minute windows: 1100 m vs 1200 m. Same length, more meters → start at 3.",
+        a: [100, 350, 450, 300, 450]
+      },
+      {
+        id: "burst",
+        title: "One-minute burst",
+        answer: 4,
+        blurb: "A single 1000 m minute beats any longer stretch.",
+        a: [400, 400, 400, 1000]
+      },
+      {
+        id: "earliest",
+        title: "Earliest start",
+        answer: 1,
+        blurb: "Two equal 1000 m pairs. Length and sum tie → keep the first.",
+        a: [500, 500, 200, 500, 500]
+      },
+      {
+        id: "shrink",
+        title: "Window shrinks",
+        answer: 5,
+        blurb: "Five slow minutes make a kilometer, then an 800 m sprint shrinks the window to minutes 5–6.",
+        a: [200, 200, 200, 200, 200, 800]
+      },
+      {
+        id: "single",
+        title: "Already a kilometer",
+        answer: 1,
+        blurb: "One reading, already ≥ 1000. Start at minute 1.",
+        a: [1000]
+      },
+      {
+        id: "late",
+        title: "Late short window",
+        answer: 11,
+        blurb: "Ten 100 m jogs, then two 500 m minutes. The last pair is only 2 minutes.",
+        a: [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 500, 500]
+      },
+      {
+        id: "spike",
+        title: "Middle spike",
+        answer: 2,
+        blurb: "2000 m in one minute. Drop everything else; start is that minute.",
+        a: [200, 2000, 200]
+      },
+      {
+        id: "edges",
+        title: "Cannot drop the edges",
+        answer: 1,
+        blurb: "600 + 100 + 600. Dropping either 600 falls under 1000, so all three minutes stay.",
+        a: [600, 100, 600]
+      },
+      {
+        id: "slide",
+        title: "Many equal windows",
+        answer: 1,
+        blurb: "Every 4 minutes sum to 1000. Same length and sum → earliest start wins.",
+        a: [250, 250, 250, 250, 250, 250, 250, 250]
+      },
+      {
+        id: "overshoot",
+        title: "Forced overshoot",
+        answer: 1,
+        blurb: "999 + 2. Dropping either minute falls under 1000, so the window stays 1001 m.",
+        a: [999, 2]
+      }
+    ];
+
+    const state = {
+      title: "",
+      a: [],
+      steps: [],
+      i: -1,
+      playing: false,
+      timer: null,
+      hover: null,
+      editIdx: null
+    };
+
+    const svg = document.getElementById("paceSvg");
+    const exampleGrid = document.getElementById("exampleGrid");
+    const inputBox = document.getElementById("inputBox");
+    const editPop = document.getElementById("editPop");
+    const editVal = document.getElementById("editVal");
+
+    function fmtRange(l, r) {
+      return l === r ? `minute ${l + 1}` : `minutes ${l + 1}–${r + 1}`;
+    }
+
+    function buildSteps(a) {
+      const n = a.length;
+      const steps = [];
+      let left = 0;
+      let sum = 0;
+      let bestLen = Infinity;
+      let bestSum = -1;
+      let bestStart = 0;
+      const candidates = [];
+
+      const snapshot = (kind, right, extra) => {
+        const best = bestLen === Infinity ? null : { start: bestStart, len: bestLen, sum: bestSum };
+        steps.push(Object.assign({
+          kind,
+          left,
+          right,
+          sum,
+          best,
+          candidates: candidates.map(c => Object.assign({}, c)),
+          dropped: null,
+          added: null,
+          updated: false
+        }, extra));
+      };
+
+      steps.push({
+        kind: "start",
+        left: 0,
+        right: -1,
+        sum: 0,
+        best: null,
+        candidates: [],
+        text: "Empty window. Right will walk from minute 1 to n; left only moves forward."
+      });
+
+      for (let right = 0; right < n; right++) {
+        sum += a[right];
+        snapshot("expand", right, {
+          added: right,
+          text: `Add minute ${right + 1} (${a[right]} m). Window sum is now ${sum} m.`
+        });
+
+        while (left < right && sum - a[left] >= TARGET) {
+          const dropped = left;
+          const droppedVal = a[left];
+          sum -= a[left];
+          left++;
+          snapshot("shrink", right, {
+            dropped,
+            text: `Drop minute ${dropped + 1} (${droppedVal} m): the rest is still ${sum} m ≥ 1000.`
+          });
+        }
+
+        if (sum >= TARGET) {
+          const len = right - left + 1;
+          let why;
+          let updated = false;
+          if (len < bestLen) {
+            why = bestLen === Infinity
+              ? `First valid kilometer: ${fmtRange(left, right)}, ${len} min, ${sum} m.`
+              : `Shorter than the current best (${len} < ${bestLen} min). New best starts at minute ${left + 1}.`;
+            updated = true;
+          } else if (len === bestLen && sum > bestSum) {
+            why = `Same ${len} min, but ${sum} m > ${bestSum} m. Prefer the denser stretch; start becomes ${left + 1}.`;
+            updated = true;
+          } else if (len === bestLen && sum === bestSum && left < bestStart) {
+            why = `Same length and sum; earlier start ${left + 1} beats ${bestStart + 1}.`;
+            updated = true;
+          } else {
+            why = len > bestLen
+              ? `Valid, but longer than the best (${len} > ${bestLen} min). Keep start ${bestStart + 1}.`
+              : `Valid, same ${len} min but ${sum} m does not beat ${bestSum} m. Keep start ${bestStart + 1}.`;
+          }
+          if (updated) {
+            bestLen = len;
+            bestSum = sum;
+            bestStart = left;
+          }
+          candidates.push({ start: left, end: right, len, sum, chosen: updated });
+          snapshot("consider", right, {
+            updated,
+            text: why
+          });
+        } else {
+          snapshot("skip", right, {
+            text: `Sum ${sum} m is still under 1000. Keep expanding.`
+          });
+        }
+      }
+
+      if (bestLen === Infinity) {
+        snapshot("done", n - 1, {
+          text: "Scan finished. No interval reached 1000 m."
+        });
+      } else {
+        snapshot("done", n - 1, {
+          text: `Scan finished. Answer is starting minute ${bestStart + 1} (${fmtRange(bestStart, bestStart + bestLen - 1)}, ${bestLen} min, ${bestSum} m).`
+        });
+      }
+      return steps;
+    }
+
+    function parseInput(text) {
+      const a = text.trim().split(/\s+/).map(Number);
+      if (!a.length || a.some(x => Number.isNaN(x))) throw new Error("Enter whole numbers separated by spaces.");
+      return a;
+    }
+
+    function currentStep() {
+      if (state.i < 0) {
+        return { kind: "idle", left: 0, right: -1, sum: 0, best: null, candidates: [], added: null, dropped: null };
+      }
+      return state.steps[state.i];
+    }
+
+    function renderChart() {
+      const a = state.a;
+      const n = a.length;
+      const step = currentStep();
+      const hover = state.hover;
+      const slot = Math.max(48, Math.min(78, Math.floor(720 / Math.max(n, 1))));
+      const padL = 36, padR = 20, padTop = 48, padBot = 78;
+      const width = padL + n * slot + padR;
+      const height = 340;
+      svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+      svg.setAttribute("width", width);
+      while (svg.firstChild) svg.removeChild(svg.firstChild);
+      const ns = "http://www.w3.org/2000/svg";
+
+      const yMax = Math.max(TARGET * 0.35, ...a, 1) * 1.18;
+      const barH = height - padTop - padBot;
+      const yOf = v => padTop + barH * (1 - v / yMax);
+      const xOf = i => padL + i * slot + slot / 2;
+
+      if (yMax >= TARGET) {
+        const gy = yOf(TARGET);
+        const goal = document.createElementNS(ns, "line");
+        goal.setAttribute("x1", padL - 8);
+        goal.setAttribute("x2", width - padR);
+        goal.setAttribute("y1", gy);
+        goal.setAttribute("y2", gy);
+        goal.setAttribute("class", "goal");
+        svg.appendChild(goal);
+        const gt = document.createElementNS(ns, "text");
+        gt.setAttribute("x", 8);
+        gt.setAttribute("y", gy - 4);
+        gt.setAttribute("class", "axis-note");
+        gt.setAttribute("text-anchor", "start");
+        gt.textContent = "1000";
+        svg.appendChild(gt);
+      }
+
+      const winL = step.right >= 0 ? step.left : -1;
+      const winR = step.right;
+      const best = step.best;
+      const showL = hover ? hover.start : winL;
+      const showR = hover ? hover.end : winR;
+
+      if (best && !hover) {
+        drawBracket(ns, svg, xOf, best.start, best.start + best.len - 1, padTop - 28, "#b45309", "BEST");
+      }
+      if (showL >= 0 && showR >= showL) {
+        drawBracket(ns, svg, xOf, showL, showR, padTop - 10, "#1d4ed8", hover ? "PREVIEW" : "WINDOW");
+      }
+
+      for (let i = 0; i < n; i++) {
+        const bw = slot * 0.62;
+        const x = xOf(i) - bw / 2;
+        const y = yOf(a[i]);
+        const h = Math.max(3, (padTop + barH) - y);
+        const rect = document.createElementNS(ns, "rect");
+        rect.setAttribute("x", x);
+        rect.setAttribute("y", y);
+        rect.setAttribute("width", bw);
+        rect.setAttribute("height", h);
+        rect.setAttribute("rx", 6);
+        let cls = "bar";
+        const inWin = showL >= 0 && i >= showL && i <= showR;
+        const inBest = best && i >= best.start && i <= best.start + best.len - 1;
+        if (inWin && inBest) cls += " in-both";
+        else if (inWin) cls += " in-window";
+        else if (inBest) cls += " in-best";
+        if (step.added === i) cls += " just-added";
+        if (step.dropped === i) cls += " just-dropped";
+        rect.setAttribute("class", cls);
+        rect.addEventListener("click", (ev) => openEditor(i, ev));
+        svg.appendChild(rect);
+
+        const val = document.createElementNS(ns, "text");
+        val.setAttribute("x", xOf(i));
+        val.setAttribute("y", y - 8);
+        val.setAttribute("class", "bar-val");
+        val.textContent = String(a[i]);
+        svg.appendChild(val);
+
+        const min = document.createElementNS(ns, "text");
+        min.setAttribute("x", xOf(i));
+        min.setAttribute("y", height - 38);
+        min.setAttribute("class", "min-label");
+        min.textContent = String(i + 1);
+        svg.appendChild(min);
+
+        if (step.right >= 0 && i === step.left) {
+          const t = document.createElementNS(ns, "text");
+          t.setAttribute("x", xOf(i));
+          t.setAttribute("y", height - 18);
+          t.setAttribute("class", "ptr");
+          t.setAttribute("fill", "#1d4ed8");
+          t.setAttribute("text-anchor", "middle");
+          t.textContent = "L";
+          svg.appendChild(t);
+        }
+        if (i === step.right) {
+          const t = document.createElementNS(ns, "text");
+          t.setAttribute("x", xOf(i));
+          t.setAttribute("y", height - 18);
+          t.setAttribute("class", "ptr");
+          t.setAttribute("fill", "#9a3412");
+          t.setAttribute("text-anchor", "middle");
+          t.textContent = "R";
+          svg.appendChild(t);
+        }
+      }
+
+      const axis = document.createElementNS(ns, "text");
+      axis.setAttribute("x", width / 2);
+      axis.setAttribute("y", height - 4);
+      axis.setAttribute("class", "axis-note");
+      axis.textContent = "minute";
+      svg.appendChild(axis);
+    }
+
+    function drawBracket(ns, svgEl, xOf, l, r, y, color, label) {
+      const x1 = xOf(l) - 16;
+      const x2 = xOf(r) + 16;
+      const p = document.createElementNS(ns, "path");
+      p.setAttribute("d", `M ${x1} ${y + 10} V ${y} H ${x2} V ${y + 10}`);
+      p.setAttribute("class", "bracket");
+      p.setAttribute("stroke", color);
+      svgEl.appendChild(p);
+      const t = document.createElementNS(ns, "text");
+      t.setAttribute("x", (x1 + x2) / 2);
+      t.setAttribute("y", y - 4);
+      t.setAttribute("class", "ptr");
+      t.setAttribute("fill", color);
+      t.setAttribute("text-anchor", "middle");
+      t.textContent = label;
+      svgEl.appendChild(t);
+    }
+
+    function renderLog() {
+      const step = currentStep();
+      const meta = document.getElementById("stepMeta");
+      const text = document.getElementById("stepText");
+      const verdict = document.getElementById("verdict");
+      document.getElementById("runTitle").textContent = state.title;
+      document.getElementById("stepCount").textContent = state.i < 0
+        ? "step 0"
+        : `step ${state.i + 1} / ${state.steps.length}`;
+
+      if (state.i < 0) {
+        meta.textContent = "Ready";
+        text.textContent = "Press Step or Play. The right pointer grows one minute at a time; the left pointer drops minutes that are not needed to keep 1000 m.";
+        verdict.className = "verdict";
+        verdict.textContent = "not started";
+      } else {
+        meta.textContent = step.kind.toUpperCase();
+        text.textContent = step.text;
+        if (step.kind === "done" && step.best) {
+          verdict.className = "verdict ready";
+          verdict.textContent = `start ${step.best.start + 1}`;
+        } else if (step.kind === "done") {
+          verdict.className = "verdict";
+          verdict.textContent = "no kilometer";
+        } else {
+          verdict.className = "verdict";
+          verdict.textContent = "scanning…";
+        }
+      }
+
+      const sum = step.sum || 0;
+      const meter = document.getElementById("meter");
+      const fill = document.getElementById("meterFill");
+      document.getElementById("meterLabel").textContent = `window sum ${sum} m`;
+      meter.className = "meter" + (sum >= TARGET ? " ok" : "");
+      fill.style.width = Math.min(100, (sum / TARGET) * 100) + "%";
+
+      document.getElementById("ptrStat").textContent = step.right < 0
+        ? "—"
+        : `${step.left + 1} · ${step.right + 1}`;
+      document.getElementById("winStat").textContent = step.right < 0
+        ? "—"
+        : `${fmtRange(step.left, step.right)}`;
+      document.getElementById("bestStat").textContent = step.best ? String(step.best.start + 1) : "—";
+      document.getElementById("bestLenStat").textContent = step.best
+        ? `${step.best.len} min / ${step.best.sum} m`
+        : "—";
+
+      const strip = document.getElementById("candStrip");
+      strip.innerHTML = "";
+      const list = step.candidates || [];
+      if (!list.length) {
+        const empty = document.createElement("div");
+        empty.className = "cand";
+        empty.textContent = "No valid window yet";
+        strip.appendChild(empty);
+      } else {
+        const best = step.best;
+        list.forEach((c, idx) => {
+          const el = document.createElement("button");
+          const isBest = best && c.start === best.start && c.len === best.len && c.sum === best.sum
+            && idx === list.findIndex(x => x.start === best.start && x.len === best.len && x.sum === best.sum);
+          el.type = "button";
+          el.className = "cand" + (isBest ? " best" : "");
+          el.innerHTML = `<b>${c.start + 1}–${c.end + 1}</b> · ${c.len} min · ${c.sum} m${isBest ? " ★" : ""}`;
+          el.addEventListener("mouseenter", () => { state.hover = c; renderChart(); });
+          el.addEventListener("mouseleave", () => { state.hover = null; renderChart(); });
+          strip.appendChild(el);
+        });
+      }
+    }
+
+    function renderAll() {
+      renderChart();
+      renderLog();
+    }
+
+    function loadRun(title, a, silent) {
+      stopPlay();
+      editPop.style.display = "none";
+      state.title = title;
+      state.a = a.slice();
+      state.steps = buildSteps(state.a);
+      state.i = -1;
+      state.hover = null;
+      if (!silent) inputBox.value = a.join(" ");
+      renderAll();
+    }
+
+    function stepOnce() {
+      if (state.i >= state.steps.length - 1) { stopPlay(); return; }
+      state.i += 1;
+      renderAll();
+      if (state.i >= state.steps.length - 1) stopPlay();
+    }
+
+    function stopPlay() {
+      state.playing = false;
+      clearTimeout(state.timer);
+      state.timer = null;
+      document.getElementById("btnPlay").textContent = "Play";
+    }
+
+    function play() {
+      if (state.playing) { stopPlay(); return; }
+      if (state.i >= state.steps.length - 1) { state.i = -1; renderAll(); }
+      state.playing = true;
+      document.getElementById("btnPlay").textContent = "Pause";
+      const tick = () => {
+        stepOnce();
+        if (state.playing) {
+          state.timer = setTimeout(tick, Number(document.getElementById("speed").value));
+        }
+      };
+      tick();
+    }
+
+    function showAnswer() {
+      stopPlay();
+      state.i = state.steps.length - 1;
+      renderAll();
+    }
+
+    function openEditor(idx, ev) {
+      ev.stopPropagation();
+      state.editIdx = idx;
+      const rect = svg.getBoundingClientRect();
+      const vb = svg.viewBox.baseVal;
+      const scaleX = rect.width / vb.width;
+      const slot = Math.max(48, Math.min(78, Math.floor(720 / Math.max(state.a.length, 1))));
+      const padL = 36;
+      const x = padL + idx * slot + slot / 2;
+      editPop.style.display = "block";
+      editPop.style.left = `${rect.left + x * scaleX - 50}px`;
+      editPop.style.top = `${rect.top + 36}px`;
+      editVal.value = String(state.a[idx]);
+      editVal.focus();
+      editVal.select();
+    }
+
+    function commitEdit() {
+      if (state.editIdx == null) return;
+      const v = Number(editVal.value);
+      if (!Number.isNaN(v) && v >= 0) {
+        state.a[state.editIdx] = Math.floor(v);
+        state.title = state.title.endsWith("(edited)") ? state.title : state.title + " (edited)";
+        inputBox.value = state.a.join(" ");
+        state.steps = buildSteps(state.a);
+        state.i = -1;
+        renderAll();
+      }
+      state.editIdx = null;
+      editPop.style.display = "none";
+    }
+
+    function randomRun() {
+      const n = 6 + Math.floor(Math.random() * 7);
+      const a = Array.from({ length: n }, () => 80 + Math.floor(Math.random() * 480));
+      if (Math.random() < 0.35) a[Math.floor(Math.random() * n)] = 700 + Math.floor(Math.random() * 500);
+      const total = a.reduce((s, x) => s + x, 0);
+      if (total < TARGET) a[n - 1] += TARGET - total;
+      return a;
+    }
+
+    function renderExampleCards() {
+      exampleGrid.innerHTML = "";
+      EXAMPLES.forEach((ex, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "ex" + (idx === 0 ? " active" : "");
+        btn.type = "button";
+        btn.innerHTML = `<div class="ex-top"><h3>${ex.title}</h3><span class="pill">start ${ex.answer}</span></div><p>${ex.blurb}</p>`;
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".ex").forEach(el => el.classList.remove("active"));
+          btn.classList.add("active");
+          loadRun(ex.title, ex.a);
+        });
+        exampleGrid.appendChild(btn);
+      });
+    }
+
+    document.getElementById("btnStep").addEventListener("click", () => { stopPlay(); stepOnce(); });
+    document.getElementById("btnPlay").addEventListener("click", play);
+    document.getElementById("btnReset").addEventListener("click", () => { stopPlay(); state.i = -1; renderAll(); });
+    document.getElementById("btnFinish").addEventListener("click", showAnswer);
+    document.getElementById("btnLoad").addEventListener("click", () => {
+      try {
+        const a = parseInput(inputBox.value);
+        document.querySelectorAll(".ex").forEach(el => el.classList.remove("active"));
+        loadRun("Custom run", a, true);
+      } catch (err) {
+        alert(err.message);
+      }
+    });
+    document.getElementById("btnRandom").addEventListener("click", () => {
+      document.querySelectorAll(".ex").forEach(el => el.classList.remove("active"));
+      loadRun("Random run", randomRun());
+    });
+    editVal.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") commitEdit();
+      if (e.key === "Escape") { state.editIdx = null; editPop.style.display = "none"; }
+    });
+    editVal.addEventListener("blur", commitEdit);
+    document.addEventListener("click", (e) => {
+      if (!editPop.contains(e.target) && state.editIdx != null) commitEdit();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (["INPUT", "TEXTAREA"].includes(e.target.tagName)) return;
+      if (e.key === " " || e.key === "ArrowRight") { e.preventDefault(); stopPlay(); stepOnce(); }
+      if (e.key === "p" || e.key === "P") play();
+      if (e.key === "r" || e.key === "R") { stopPlay(); state.i = -1; renderAll(); }
+      if (e.key === "a" || e.key === "A") showAnswer();
+    });
+
+    renderExampleCards();
+    loadRun(EXAMPLES[0].title, EXAMPLES[0].a);
+  </script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 # Java Senior Interview Preparation Guide
 
-This repository contains 44 interview and exam questions covering key topics for senior-level positions.
+This repository contains 58 interview and exam questions covering key topics for senior-level positions.
 
 ## Question Index
 
@@ -23,6 +23,15 @@ This repository contains 44 interview and exam questions covering key topics for
 16. [Q35: Courier unknown position (max X)](Q32_Courier_Unknown_Position.java)
 17. [Q36: Non-overlapping substrings (maximize length)](Q33_Non_Overlapping_Substrings.java)
 18. [Q37: Artifact exhibition — minimize adjacent differences (smallest range)](Q37_Artifact_Exhibition_Min_Adjacent_Sum.java)
+19. [Q50: Card dealing — maximize aces for player 1](Q50_Card_Dealing_Max_Aces.java)
+20. [Q51: Mirror-symmetric binary tree](Q51_Mirror_Symmetric_Tree.java)
+21. [Q52: Fastest kilometer (starting minute)](Q52_Fastest_Kilometer.java)
+22. [Q53: Optimal temperature range (closer / further)](Q53_Optimal_Temperature_Range.java)
+23. [Q54: Seconds offset to time of day](Q54_Seconds_To_Time_Of_Day.java)
+24. [Q55: Coupon pairs summing to S (two sorted lists)](Q55_Coupon_Two_Category_Pairs.java)
+25. [Q56: Run-Length Encoding (RLE)](Q56_Run_Length_Encoding.java)
+26. [Q57: Range geometric mean (prefix of logs)](Q57_Range_Geometric_Mean.java)
+27. [Q58: Three subjects closest to load X (3Sum Closest)](Q58_Three_Sum_Closest.java)
 
 ### Concurrency & Threading
 7. [Q02: ExecutorService shutdownNow()](Q02_ExecutorService_ShutdownNow.java)
@@ -95,7 +104,7 @@ This repository contains 44 interview and exam questions covering key topics for
 ## Topics Covered
 
 - Collections framework (TreeSet, HashSet, PriorityQueue, ArrayList, Iterator)
-- Data structures (Binary Search Trees, balanced tree construction, prefix/suffix sums, sliding window, frequency counting, modular arithmetic, graph algorithms, dynamic programming, HashMap score aggregation, interval intersection, string processing, multi-list smallest range / k-way merge)
+- Data structures (Binary Search Trees, balanced tree construction, prefix/suffix sums, sliding window, frequency counting, modular arithmetic, graph algorithms, dynamic programming, HashMap score aggregation, interval intersection, string processing, multi-list smallest range / k-way merge, circular dealing / modular indexing, mirror-symmetric trees, two pointers / shortest subarray with sum ≥ S, 1D constraint / half-line intersection, clock arithmetic / negative modulo, sorted two-sum / two pointers without hashing, run-length encoding, prefix sums of logarithms / range geometric mean, 3-sum closest)
 - Concurrency (ExecutorService, ReentrantLock, ThreadLocal, synchronized)
 - Exception handling (checked vs unchecked, propagation, finally blocks)
 - Generics and wildcards
