@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Q38 — Half-Disk Sine Area</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --panel: #1a2332;
+      --text: #e7ecf3;
+      --muted: #8b9cb3;
+      --accent: #4fc3f7;
+      --disk: #263245;
+      --region: rgba(79, 195, 247, 0.55);
+      --sine: #ffb74d;
+      --center: #ef5350;
+      --ok: #66bb6a;
+      --warn: #ffa726;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .wrap {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 24px 20px 40px;
+    }
+
+    h1 { margin: 0 0 8px; font-size: 1.6rem; font-weight: 600; }
+
+    .subtitle { color: var(--muted); margin-bottom: 20px; }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid #2d3a4f;
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-bottom: 16px;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      max-width: 920px;
+      height: auto;
+      border-radius: 8px;
+      background: #111820;
+    }
+
+    .controls { display: grid; gap: 14px; margin-top: 16px; }
+
+    label {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 0.95rem;
+    }
+
+    input[type="range"] { width: 100%; accent-color: var(--accent); }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    button {
+      background: #2d4059;
+      color: var(--text);
+      border: 1px solid #3d5270;
+      border-radius: 8px;
+      padding: 8px 14px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    button:hover { background: #364b68; }
+    button.active { background: var(--accent); color: #0f1419; border-color: var(--accent); }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .stat {
+      background: #111820;
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+
+    .stat .label {
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .stat .value {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-top: 4px;
+      word-break: break-word;
+    }
+
+    .ok { color: var(--ok); }
+    .warn { color: var(--warn); }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 12px;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    .legend span::before {
+      content: "";
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      margin-right: 6px;
+      vertical-align: -2px;
+    }
+
+    .legend .region::before { background: var(--region); border: 1px solid var(--accent); }
+    .legend .sine::before { background: var(--sine); }
+    .legend .disk::before { background: var(--disk); border: 1px solid #5a6a80; }
+    .legend .center::before { background: var(--center); border-radius: 50%; }
+
+    .explain { font-size: 0.92rem; color: var(--muted); }
+    .explain strong { color: var(--text); }
+
+    code {
+      background: #111820;
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-size: 0.88em;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Q38: Half-Disk Sine Area</h1>
+    <p class="subtitle">
+      Region: <code>(x−3)² + y² ≤ 9</code> and <code>y ≤ sin(aπx / 327)</code>.
+      Target area: <strong>4.5π</strong>.
+    </p>
+
+    <div class="panel">
+      <canvas id="graph" width="920" height="520"></canvas>
+
+      <div class="legend">
+        <span class="region">Shaded: y ≤ sin curve inside disk</span>
+        <span class="sine">Sine boundary</span>
+        <span class="disk">Rest of disk</span>
+        <span class="center">Center (3, 0)</span>
+      </div>
+
+      <div class="controls">
+        <label>
+          Parameter <strong>a</strong> = <span id="aValue">109</span>
+          <input id="aSlider" type="range" min="1" max="218" value="109" step="1">
+        </label>
+
+        <div class="row">
+          <button id="btn109" class="active">a = 109 (answer)</button>
+          <button id="btn108">a = 108 (not symmetric)</button>
+          <button id="btn54">a = 54</button>
+          <button id="btn218">a = 218</button>
+        </div>
+
+        <div class="stats">
+          <div class="stat">
+            <div class="label">Estimated area</div>
+            <div class="value" id="areaEst">calculating…</div>
+          </div>
+          <div class="stat">
+            <div class="label">Fraction of disk</div>
+            <div class="value" id="fractionEst">calculating…</div>
+          </div>
+          <div class="stat">
+            <div class="label">sin at center x=3</div>
+            <div class="value" id="sinCenter">calculating…</div>
+          </div>
+          <div class="stat">
+            <div class="label">Symmetry (3a/327 ∈ ℤ)</div>
+            <div class="value" id="symmetry">calculating…</div>
+          </div>
+        </div>
+
+        <p class="explain" id="explain"></p>
+      </div>
+    </div>
+
+    <div class="panel explain">
+      <strong>How to read the graph</strong><br>
+      Gray = disk, blue = points with <code>y ≤ sin(aπx/327)</code>, orange = sine curve, red dot = center (3,0).
+      At <code>a = 109</code> the sine passes through the center and splits the disk into equal halves.
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      const CENTER_X = 3;
+      const RADIUS = 3;
+      const DISK_AREA = 9 * Math.PI;
+      const TARGET_AREA = 4.5 * Math.PI;
+      const DENOM = 327;
+
+      const canvas = document.getElementById("graph");
+      const ctx = canvas.getContext("2d");
+
+      const aSlider = document.getElementById("aSlider");
+      const aValueEl = document.getElementById("aValue");
+      const areaEst = document.getElementById("areaEst");
+      const fractionEst = document.getElementById("fractionEst");
+      const sinCenterEl = document.getElementById("sinCenter");
+      const symmetryEl = document.getElementById("symmetry");
+      const explainEl = document.getElementById("explain");
+
+      const buttons = { btn109: 109, btn108: 108, btn54: 54, btn218: 218 };
+
+      const pad = { left: 56, right: 24, top: 24, bottom: 52 };
+      const xMin = -0.5;
+      const xMax = 6.5;
+      const yMin = -3.5;
+      const yMax = 3.5;
+
+      function sine(x, a) {
+        return Math.sin(a * Math.PI * x / DENOM);
+      }
+
+      function plotWidth() {
+        return canvas.width - pad.left - pad.right;
+      }
+
+      function plotHeight() {
+        return canvas.height - pad.top - pad.bottom;
+      }
+
+      function scale() {
+        return Math.min(plotWidth() / (xMax - xMin), plotHeight() / (yMax - yMin));
+      }
+
+      function originX() {
+        return pad.left + (plotWidth() - (xMax - xMin) * scale()) / 2;
+      }
+
+      function originY() {
+        return pad.top + (plotHeight() - (yMax - yMin) * scale()) / 2;
+      }
+
+      function toCanvasX(x) {
+        return originX() + (x - xMin) * scale();
+      }
+
+      function toCanvasY(y) {
+        return originY() + (yMax - y) * scale();
+      }
+
+      function toMathX(px) {
+        return xMin + (px - originX()) / scale();
+      }
+
+      function toMathY(py) {
+        return yMax - (py - originY()) / scale();
+      }
+
+      function radiusPx() {
+        return RADIUS * scale();
+      }
+
+      function inDisk(x, y) {
+        const dx = x - CENTER_X;
+        return dx * dx + y * y <= RADIUS * RADIUS + 1e-12;
+      }
+
+      function drawGrid() {
+        ctx.strokeStyle = "#2a3547";
+        ctx.lineWidth = 1;
+        ctx.fillStyle = "#8b9cb3";
+        ctx.font = "12px Segoe UI, sans-serif";
+
+        for (let x = 0; x <= 6; x++) {
+          const cx = toCanvasX(x);
+          ctx.beginPath();
+          ctx.moveTo(cx, pad.top);
+          ctx.lineTo(cx, canvas.height - pad.bottom);
+          ctx.stroke();
+          ctx.fillText(String(x), cx - 4, canvas.height - pad.bottom + 18);
+        }
+
+        for (let y = -3; y <= 3; y++) {
+          const cy = toCanvasY(y);
+          ctx.beginPath();
+          ctx.moveTo(pad.left, cy);
+          ctx.lineTo(canvas.width - pad.right, cy);
+          ctx.stroke();
+          if (y !== 0) ctx.fillText(String(y), 18, cy + 4);
+        }
+
+        ctx.strokeStyle = "#5a6a80";
+        ctx.beginPath();
+        ctx.moveTo(pad.left, toCanvasY(0));
+        ctx.lineTo(canvas.width - pad.right, toCanvasY(0));
+        ctx.moveTo(toCanvasX(0), pad.top);
+        ctx.lineTo(toCanvasX(0), canvas.height - pad.bottom);
+        ctx.stroke();
+      }
+
+      function drawRegionPixel(a) {
+        const cx = toCanvasX(CENTER_X);
+        const cy = toCanvasY(0);
+        const rPx = radiusPx();
+        const x0 = Math.max(0, Math.floor(cx - rPx));
+        const x1 = Math.min(canvas.width - 1, Math.ceil(cx + rPx));
+        const y0 = Math.max(0, Math.floor(cy - rPx));
+        const y1 = Math.min(canvas.height - 1, Math.ceil(cy + rPx));
+
+        const img = ctx.createImageData(canvas.width, canvas.height);
+        const data = img.data;
+        const r2 = RADIUS * RADIUS;
+        const bg = { r: 17, g: 24, b: 32, a: 255 };
+
+        for (let i = 0; i < data.length; i += 4) {
+          data[i] = bg.r;
+          data[i + 1] = bg.g;
+          data[i + 2] = bg.b;
+          data[i + 3] = bg.a;
+        }
+
+        for (let py = y0; py <= y1; py++) {
+          for (let px = x0; px <= x1; px++) {
+            const x = toMathX(px);
+            const y = toMathY(py);
+            const dx = x - CENTER_X;
+            if (dx * dx + y * y > r2) continue;
+
+            const idx = (py * canvas.width + px) * 4;
+            if (y <= sine(x, a)) {
+              data[idx] = 79;
+              data[idx + 1] = 195;
+              data[idx + 2] = 247;
+              data[idx + 3] = 140;
+            } else {
+              data[idx] = 38;
+              data[idx + 1] = 50;
+              data[idx + 2] = 69;
+              data[idx + 3] = 220;
+            }
+          }
+        }
+
+        ctx.putImageData(img, 0, 0);
+      }
+
+      function drawCircleOutline() {
+        ctx.beginPath();
+        ctx.arc(toCanvasX(CENTER_X), toCanvasY(0), radiusPx(), 0, Math.PI * 2);
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+      }
+
+      function drawSine(a) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(toCanvasX(CENTER_X), toCanvasY(0), radiusPx(), 0, Math.PI * 2);
+        ctx.clip();
+
+        ctx.beginPath();
+        const steps = 1000;
+        for (let i = 0; i <= steps; i++) {
+          const x = xMin + (i / steps) * (xMax - xMin);
+          const y = sine(x, a);
+          const px = toCanvasX(x);
+          const py = toCanvasY(y);
+          if (i === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+        ctx.strokeStyle = "#ffb74d";
+        ctx.lineWidth = 3;
+        ctx.lineJoin = "round";
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      function drawCenter(a) {
+        const cx = toCanvasX(CENTER_X);
+        const cy = toCanvasY(0);
+
+        ctx.beginPath();
+        ctx.arc(cx, cy, 8, 0, Math.PI * 2);
+        ctx.fillStyle = "#ef5350";
+        ctx.fill();
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 12px Segoe UI, sans-serif";
+        ctx.fillText("(3, 0)", cx + 12, cy - 10);
+
+        const sc = sine(CENTER_X, a);
+        if (Math.abs(sc) > 0.02) {
+          const sy = toCanvasY(sc);
+          ctx.beginPath();
+          ctx.arc(cx, sy, 5, 0, Math.PI * 2);
+          ctx.fillStyle = "#ffa726";
+          ctx.fill();
+          ctx.setLineDash([5, 4]);
+          ctx.strokeStyle = "#ffa726";
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.moveTo(cx, cy);
+          ctx.lineTo(cx, sy);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+      }
+
+      function estimateArea(a, samples) {
+        let inside = 0;
+        for (let i = 0; i < samples; i++) {
+          const theta = Math.random() * 2 * Math.PI;
+          const r = RADIUS * Math.sqrt(Math.random());
+          const x = CENTER_X + r * Math.cos(theta);
+          const y = r * Math.sin(theta);
+          if (y <= sine(x, a)) inside++;
+        }
+        return (inside / samples) * DISK_AREA;
+      }
+
+      function isSymmetric(a) {
+        const k = (3 * a) / DENOM;
+        return Math.abs(k - Math.round(k)) < 1e-9;
+      }
+
+      function setActiveButton(a) {
+        Object.entries(buttons).forEach(function (entry) {
+          document.getElementById(entry[0]).classList.toggle("active", entry[1] === a);
+        });
+      }
+
+      function updateExplain(a, sym) {
+        if (a === 109) {
+          explainEl.innerHTML =
+            "<strong>a = 109:</strong> 3a/327 = 1, sin(π) = 0 at center. " +
+            "Odd symmetry about (3, 0) gives area ≈ 4.5π.";
+          return;
+        }
+        if (sym) {
+          explainEl.innerHTML =
+            "<strong>a = " + a + ":</strong> Symmetry holds (a = 109k), area ≈ 4.5π.";
+          return;
+        }
+        explainEl.innerHTML =
+          "<strong>a = " + a + ":</strong> Sine does not pass through center. " +
+          "Shaded area is not exactly half the disk.";
+      }
+
+      function updateStats(a) {
+        const sc = sine(CENTER_X, a);
+        const sym = isSymmetric(a);
+        const k = (3 * a) / DENOM;
+
+        sinCenterEl.textContent = sc.toFixed(4);
+        sinCenterEl.className = "value " + (Math.abs(sc) < 0.02 ? "ok" : "warn");
+
+        symmetryEl.textContent = sym ? "Yes (k = " + Math.round(k) + ")" : "No (" + k.toFixed(4) + ")";
+        symmetryEl.className = "value " + (sym ? "ok" : "warn");
+
+        updateExplain(a, sym);
+
+        areaEst.textContent = "calculating…";
+        fractionEst.textContent = "calculating…";
+
+        setTimeout(function () {
+          const area = estimateArea(a, 30000);
+          const frac = area / DISK_AREA;
+
+          areaEst.textContent = area.toFixed(3) + " (target " + TARGET_AREA.toFixed(3) + ")";
+          areaEst.className = "value " + (Math.abs(area - TARGET_AREA) < 0.12 ? "ok" : "warn");
+
+          fractionEst.textContent = (frac * 100).toFixed(1) + "% of disk";
+          fractionEst.className = "value " + (Math.abs(frac - 0.5) < 0.02 ? "ok" : "warn");
+        }, 0);
+      }
+
+      function render(a) {
+        aValueEl.textContent = String(a);
+        aSlider.value = String(a);
+        setActiveButton(a);
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawRegionPixel(a);
+        drawGrid();
+        drawCircleOutline();
+        drawSine(a);
+        drawCenter(a);
+        updateStats(a);
+      }
+
+      aSlider.addEventListener("input", function () {
+        render(Number(aSlider.value));
+      });
+
+      Object.keys(buttons).forEach(function (id) {
+        document.getElementById(id).addEventListener("click", function () {
+          render(buttons[id]);
+        });
+      });
+
+      render(109);
+    })();
+  </script>
+</body>
+</html>
