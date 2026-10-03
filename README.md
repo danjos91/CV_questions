@@ -90,6 +90,10 @@ This repository contains 64 interview and exam questions covering key topics for
 65. [Q48: Gold Stealing (Dasha and Zulik)](Q48_Gold_Stealing.md)
 66. [Q49: Partial Derivative \(f_x(3, 4)\)](Q49_Partial_Derivative_fx.md)
 
+### Yandex Cup 2026 — Algorithm track
+- [Preparation kit: plan, checklists, weekly log](yandex-cup/README.md)
+- [Java contest template (fast IO, safe sort, big-stack thread)](yandex-cup/Template.java)
+
 ## How to Use
 
 1. Each Java file contains:
