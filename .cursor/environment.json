@@ -1,0 +1,4 @@
+{
+  "name": "Java Interview Prep",
+  "install": "bash .cursor/install.sh"
+}
