@@ -94,6 +94,15 @@ This repository contains 64 interview and exam questions covering key topics for
 - [Preparation kit: plan, checklists, weekly log](yandex-cup/README.md)
 - [Java contest template (fast IO, safe sort, big-stack thread)](yandex-cup/Template.java)
 
+## Interview practice pack (HR / Tech Lead / Java)
+
+Daily practice materials for Senior Java / Tech Lead interviews (separate from the Q* puzzle files above):
+
+- [Question bank (45)](interview_prep/questions.md)
+- [Already asked IDs](interview_prep/asked.txt)
+- [Pending answers](interview_prep/PENDING.md)
+- [Reviewed answers (draft + model)](interview_prep/REVIEWED.md)
+
 ## How to Use
 
 1. Each Java file contains:
